@@ -1,0 +1,11 @@
+{
+  "uniforms": [
+    {
+      "type": "color3",
+      "name": "test trick",
+      "r": 100,
+      "g": 20,
+      "b": 20
+    }
+  ]
+}

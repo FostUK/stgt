@@ -266,6 +266,7 @@ directly adapted from the C++ code:
 
   onKeyPress(event) {
     const key = event.key;
+    console.log(key)
     if (key == 'h') {
       const hidden = this.help.style.display == 'none';
       this.help.style.display = hidden ? 'block' : 'none';
