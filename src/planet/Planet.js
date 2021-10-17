@@ -1,12 +1,9 @@
-import { COMP_GL, COMP_GL_PROGRAM, GRASS_ONE_TEXTURE, ROCK_ONE_TEXTURE } from "../Loader.js"
+import { COMP_GL, COMP_GL_PROGRAM } from "../Loader.js"
 import { UTILS } from "../Utils.js"
 import { makePermTable } from "./gen/PerlinNoise.js"
+import { planetMaterial } from "./planet-material.js"
 
 const PERMUTATION_TABLE_SIZE = 512
-const PERMUTATION_TEXTURE_HEIGHT = 16
-const PERMUTATION_TEXTURE_WIDTH = 32
-const HASH_TEXTURE_WIDTH = 256
-const MAX_LEVELS = 18
 
 var IcoWorker = new Worker("/src/planet/gen/icosahedron/Worker.js", { type: "module" })
 var IcoWorkerUser = null
@@ -43,84 +40,12 @@ export class Planet extends BABYLON.TransformNode {
 			mieG: 0.8,
 		}
 
-		this.material = new BABYLON.ShaderMaterial(
-			this.name,
-			scene,
-			{
-				vertex: "IcoPlanet",
-				fragment: "IcoPlanet",
-			},
-			{
-				attributes: ["position"],
-				uniforms: [
-					"world",
-					"worldView",
-					"worldViewProjection",
-					"view",
-					"projection",
-					"viewProjection",
-					"time",
-					"cameraPosition",
-					"eyepos",
-					"eyepos_lowpart",
-				],
-				samplers: ["hashTexture", "grassTexture", "rockTexture", "permutationTexture"],
-			},
-		)
-
-		this.material.setInt("SEED", this.seedHash)
-		this.material.setFloat("radius", this.radius)
-		this.material.setFloat("maxHeight", this.maxHeight)
-
-		this.material.setInt("octaves", this.properties.octaves)
-		this.material.setFloat("frequency", this.properties.frequency)
-		this.material.setFloat("amplitude", this.properties.amplitude)
-		this.material.setFloat("roughness", this.properties.roughness)
-		this.material.setFloat("persistence", this.properties.persistence)
-		this.material.setFloat("warpAmplitude", this.properties.warpAmplitude)
-		this.material.setFloat("warpFrequency", this.properties.warpFrequency)
-
-		setFeedbackUniformInt("SEED", this.seedHash)
-		setFeedbackUniformFloat("radius", this.radius)
-		setFeedbackUniformFloat("maxHeight", this.maxHeight)
-
-		setFeedbackUniformInt("octaves", this.properties.octaves)
-		setFeedbackUniformFloat("frequency", this.properties.frequency)
-		setFeedbackUniformFloat("amplitude", this.properties.amplitude)
-		setFeedbackUniformFloat("roughness", this.properties.roughness)
-		setFeedbackUniformFloat("persistence", this.properties.persistence)
-		setFeedbackUniformFloat("warpAmplitude", this.properties.warpAmplitude)
-		setFeedbackUniformFloat("warpFrequency", this.properties.warpFrequency)
-
-		this.hashTexture = new BABYLON.CustomProceduralTexture(this.name, "Hash", HASH_TEXTURE_WIDTH, scene)
-		this.hashTexture.delayLoad()
-		this.hashTexture.setInt("SEED", this.seedHash)
-		this.material.setTexture("hashTexture", this.hashTexture)
-
-		for (var i = 0; i < GRASS_ONE_TEXTURE.length; i++) {
-			this.material.setTexture("grassTexture[" + i + "]", GRASS_ONE_TEXTURE[i])
-			this.material.setTexture("rockTexture[" + i + "]", ROCK_ONE_TEXTURE[i])
-		}
-
-		this.permutationTexture = new BABYLON.RawTexture(
-			this.noise.perm,
-			PERMUTATION_TEXTURE_WIDTH,
-			PERMUTATION_TEXTURE_HEIGHT,
-			BABYLON.Engine.TEXTUREFORMAT_R,
-			scene,
-			false,
-			false,
-			BABYLON.Texture.LINEAR_LINEAR,
-			BABYLON.Engine.TEXTURETYPE_UNSIGNED_BYTE,
-		)
-		this.material.setTexture("permutationTexture", this.permutationTexture)
-
-		this.hashTexture.onGeneratedObservable.addOnce(
-			function () {
+		const onComplete = function () {
 				this.createPlanet()
 				this.hashTexture.isEnabled = false
-			}.bind(this),
-		)
+			}.bind(this)
+
+		planetMaterial(this, onComplete)
 	}
 
 	createBlankSphere() {
@@ -223,12 +148,6 @@ export class Planet extends BABYLON.TransformNode {
 var IN_TRANSFORM_BUFFER = null
 var OUT_TRANSFORM_BUFFER = null
 var FEEDBACK_TRANSFORM_BUFFER = null
-function setFeedbackUniformInt(name, value) {
-	COMP_GL.uniform1i(COMP_GL.getUniformLocation(COMP_GL_PROGRAM, name), value)
-}
-function setFeedbackUniformFloat(name, value) {
-	COMP_GL.uniform1f(COMP_GL.getUniformLocation(COMP_GL_PROGRAM, name), value)
-}
 
 function useTransformFeedback(gl, dataIn, dataOut, planet) {
 	const VERTEX_COUNT = dataIn.length
