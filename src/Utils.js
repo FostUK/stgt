@@ -1,4 +1,4 @@
-const UTILS = {}
+export const UTILS = {}
 
 // from by: https://www.shadertoy.com/view/WttXWX
 UTILS.TripleBias32 = function (x) {

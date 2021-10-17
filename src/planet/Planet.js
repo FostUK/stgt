@@ -1,13 +1,16 @@
+import { COMP_GL, COMP_GL_PROGRAM, GRASS_ONE_TEXTURE, ROCK_ONE_TEXTURE } from "../Loader.js"
+import { UTILS } from "../Utils.js"
+
 const PERMUTATION_TABLE_SIZE = 512
 const PERMUTATION_TEXTURE_HEIGHT = 16
 const PERMUTATION_TEXTURE_WIDTH = 32
 const HASH_TEXTURE_WIDTH = 256
 const MAX_LEVELS = 18
 
-var IcoWorker = new Worker("src/planet/gen/icosahedron/Worker.js")
+var IcoWorker = new Worker("/src/planet/gen/icosahedron/Worker.js", { type: "module" })
 var IcoWorkerUser = null
 
-class Planet extends BABYLON.TransformNode {
+export class Planet extends BABYLON.TransformNode {
 	constructor(p, scene) {
 		super(p.name || "Earth", scene)
 
@@ -204,8 +207,8 @@ class Planet extends BABYLON.TransformNode {
 	}
 
 	setLightDirection(direction) {
-		if (planet.material != null) {
-			planet.material.setVector3("lightDir", direction)
+		if (this.material != null) {
+			this.material.setVector3("lightDir", direction)
 		}
 	}
 

@@ -1,4 +1,6 @@
-function loadResources(callback, scene) {
+import { UTILS } from './Utils.js'
+
+export const loadResources = (callback, scene) => {
 	var load = function (state) {
 		switch (state) {
 			case 0:
@@ -8,7 +10,7 @@ function loadResources(callback, scene) {
 				loadAtmosphereDataTextures(() => load(2), scene)
 				break
 			case 2:
-				loadAssets(() => load(3))
+				loadAssets(() => load(3), scene)
 				break
 			case 3:
 				setupCompGLProgram(() => load(4))
@@ -60,7 +62,7 @@ function loadShaders(callback) {
 		ICOPLANET_FRAGMENT = data[5]
 		POSTPROCESS = data[8]
 		PRECOMPUTEHASH = data[10]
-		NOISE = data[6] + data[7] + data[3]
+		const NOISE = data[6] + data[7] + data[3]
 		TERRAIN_TRANSFORM = data[2] + NOISE + data[13]
 
 		BABYLON.Effect.IncludesShadersStore["Tools"] = data[2]
@@ -85,12 +87,12 @@ function loadShaders(callback) {
 	})
 }
 
-var ASSET_MANAGER = null
-var ROCK_ONE_TEXTURE = []
-var GRASS_ONE_TEXTURE = []
+let ASSET_MANAGER = null
+export let ROCK_ONE_TEXTURE = []
+export let GRASS_ONE_TEXTURE = []
 
-function loadAssets(callback) {
-	ASSET_MANAGER = new BABYLON.AssetsManager(game.scene)
+function loadAssets(callback, scene) {
+	ASSET_MANAGER = new BABYLON.AssetsManager(scene)
 
 	ASSET_MANAGER.onProgress = function (remainingCount, totalCount, lastFinishedTask) {
 		console.log(remainingCount + 1 + " out of " + totalCount + " textures need to be loaded.")
@@ -141,10 +143,10 @@ function loadAssets(callback) {
 	ASSET_MANAGER.load()
 }
 
-var IRRADIANCE_TEXTURE
-var SCATTERING_TEXTURE
-var TRANSMITTANCE_TEXTURE
-var SINGLE_MIE_SCATTERING_TEXTURE
+export let IRRADIANCE_TEXTURE
+export let SCATTERING_TEXTURE
+export let TRANSMITTANCE_TEXTURE
+export let SINGLE_MIE_SCATTERING_TEXTURE
 
 const TRANSMITTANCE_TEXTURE_WIDTH = 256
 const TRANSMITTANCE_TEXTURE_HEIGHT = 64
@@ -232,8 +234,8 @@ function loadAtmosphereDataTextures(callback, scene) {
 	}, 10)
 }
 
-var COMP_GL = null
-var COMP_GL_PROGRAM = null
+export let COMP_GL = null
+export let COMP_GL_PROGRAM = null
 
 function setupCompGLProgram(callback) {
 	function getShader(gl, source, type) {
@@ -259,4 +261,6 @@ function setupCompGLProgram(callback) {
 	gl.useProgram(program)
 
 	callback()
+
+	return {COMP_GL, COMP_GL_PROGRAM}
 }

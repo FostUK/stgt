@@ -63,7 +63,7 @@ class WorkerThread
 	{
 		this.parentPool = parentPool;
 
-		this.worker = new Worker(parentPool.url);
+		this.worker = new Worker(parentPool.url, {type: 'module'});
 		this.worker.onmessage = function(e){
 			this.workerTask.callback(e);
 			this.parentPool.submit(this);

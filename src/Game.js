@@ -1,5 +1,12 @@
-//import { Planet } from "./planet/Planet.js"
-
+import { Planet } from "./planet/Planet.js"
+import { UTILS } from './Utils.js'
+import {
+	loadResources,
+	IRRADIANCE_TEXTURE,
+	SCATTERING_TEXTURE,
+	SINGLE_MIE_SCATTERING_TEXTURE,
+	TRANSMITTANCE_TEXTURE,
+} from "./Loader.js"
 ;(window.oldWorkers || []).forEach(w => w.terminate())
 UTILS.clearAllTimeoutsAndIntervals()
 
@@ -270,7 +277,6 @@ var mouseMin = -75,
 
 var mouseX = 0,
 	mouseY = 0
-
 
 function updateCamera() {
 	mouseX += game.mouseDX * mouseSensitivity * game.delta
