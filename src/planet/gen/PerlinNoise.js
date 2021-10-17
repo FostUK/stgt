@@ -50,7 +50,7 @@ function SampleNoise(p, opt)
 
 
 
-function makePermTable(randomOrSeed, permTableSize)
+export const makePermTable = (randomOrSeed, permTableSize) =>
 {
 	var random;
 	if (typeof randomOrSeed == 'function') {

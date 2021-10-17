@@ -1,5 +1,6 @@
 import { COMP_GL, COMP_GL_PROGRAM, GRASS_ONE_TEXTURE, ROCK_ONE_TEXTURE } from "../Loader.js"
 import { UTILS } from "../Utils.js"
+import { makePermTable } from "./gen/PerlinNoise.js"
 
 const PERMUTATION_TABLE_SIZE = 512
 const PERMUTATION_TEXTURE_HEIGHT = 16
