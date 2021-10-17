@@ -136,7 +136,7 @@ export class Planet extends BABYLON.TransformNode {
 
 	createPlanet() {
 		// this.isRunning = true;
-		// useDedicatedIcosahedronWorker(this, this.getScene());
+		// initWorker(this, this.getScene());
 		this.checkIfRunning()
 		console.log(this.name + "-(" + this.birthName + ") was created")
 	}
@@ -176,7 +176,7 @@ export class Planet extends BABYLON.TransformNode {
 				}
 				this.blankSphere = null
 				this.mesh = null
-				useDedicatedIcosahedronWorker(this, this.getScene())
+				initWorker(this)
 			}
 		}
 	}
@@ -288,7 +288,8 @@ function useTransformFeedback(gl, dataIn, dataOut, planet) {
 	gl.disable(gl.RASTERIZER_DISCARD)
 }
 
-function useDedicatedIcosahedronWorker(planet, scene) {
+const initWorker = planet => {
+	const scene = planet.getScene()
 	IcoWorkerUser = planet
 
 	function makeMesh(meshData) {
