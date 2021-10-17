@@ -41,9 +41,9 @@ export class Planet extends BABYLON.TransformNode {
 		}
 
 		const onComplete = function () {
-				this.createPlanet()
-				this.hashTexture.isEnabled = false
-			}.bind(this)
+			this.createPlanet()
+			this.hashTexture.isEnabled = false
+		}.bind(this)
 
 		planetMaterial(this, onComplete)
 	}
@@ -207,76 +207,71 @@ function useTransformFeedback(gl, dataIn, dataOut, planet) {
 	gl.disable(gl.RASTERIZER_DISCARD)
 }
 
-const initWorker = planet => {
-	const scene = planet.getScene()
-	IcoWorkerUser = planet
+const sendToWorkerFn = planet => state => {
+	switch (state) {
+		case 0:
+			IcoWorker.postMessage({
+				state: state,
+				seed: planet.seed,
+				properties: planet.properties,
+				hashTexture: UTILS.getTextureData(planet.hashTexture),
+			})
+			break
 
-	function makeMesh(meshData) {
-		if (IcoWorkerUser.mesh == null) {
-			IcoWorkerUser.mesh = new BABYLON.Mesh("t", scene)
-			IcoWorkerUser.mesh.material = IcoWorkerUser.material
-			IcoWorkerUser.mesh.parent = IcoWorkerUser
+		case 1:
+			// let prev = scene.activeCamera.fov;
+			// scene.activeCamera.fov = UTILS.degrees_to_radians(180);
+			// scene.updateTransformMatrix();
+			// let frustumplanes = BABYLON.Frustum.GetPlanes(scene.getTransformMatrix());
+			// scene.activeCamera.fov = prev;
+
+			IcoWorker.postMessage({
+				state,
+				center: planet.lastCenter,
+				radius: planet.radius,
+				maxHeight: planet.maxHeight,
+				position: planet.position,
+				//frustumplanes: frustumplanes,
+				direction: planet.getScene().activeCamera.getForwardRay(1).direction,
+				// windowWidth: IcoWorkerUser.getScene().activeCamera.viewport.width,
+				// windowHeight: IcoWorkerUser.getScene().activeCamera.viewport.height
+			})
+			break
+	}
+}
+
+const makeMesh = (planet, meshData) => {
+		if (planet.mesh == null) {
+			planet.mesh = new BABYLON.Mesh("t", planet.getScene())
+			planet.mesh.material = planet.material
+			planet.mesh.parent = planet
 		}
 		if (meshData.vertices.length > 0) {
-			useTransformFeedback(COMP_GL, meshData.vertices, meshData.vertices, IcoWorkerUser)
-			IcoWorkerUser.mesh.setVerticesData(BABYLON.VertexBuffer.PositionKind, meshData.vertices)
-			IcoWorkerUser.mesh.setIndices(meshData.indices, null, false)
+			useTransformFeedback(COMP_GL, meshData.vertices, meshData.vertices, planet)
+			planet.mesh.setVerticesData(BABYLON.VertexBuffer.PositionKind, meshData.vertices)
+			planet.mesh.setIndices(meshData.indices, null, false)
 		}
 	}
 
-	function sendToWorker(state) {
-		switch (state) {
-			case 0:
-				IcoWorker.postMessage({
-					state: state,
-					seed: IcoWorkerUser.seed,
-					properties: IcoWorkerUser.properties,
-					hashTexture: UTILS.getTextureData(IcoWorkerUser.hashTexture),
-				})
-				break
-
-			case 1:
-				// let prev = scene.activeCamera.fov;
-				// scene.activeCamera.fov = UTILS.degrees_to_radians(180);
-				// scene.updateTransformMatrix();
-				// let frustumplanes = BABYLON.Frustum.GetPlanes(scene.getTransformMatrix());
-				// scene.activeCamera.fov = prev;
-
-				IcoWorker.postMessage({
-					state: state,
-					center: IcoWorkerUser.lastCenter,
-					radius: IcoWorkerUser.radius,
-					maxHeight: IcoWorkerUser.maxHeight,
-					position: IcoWorkerUser.position,
-					//frustumplanes: frustumplanes,
-					direction: scene.activeCamera.getForwardRay(1).direction,
-					// windowWidth: IcoWorkerUser.getScene().activeCamera.viewport.width,
-					// windowHeight: IcoWorkerUser.getScene().activeCamera.viewport.height
-				})
-				break
-		}
-	}
-
+const initWorker = planet => {
+	IcoWorkerUser = planet
+	const sendToWorker = sendToWorkerFn(planet)
 	sendToWorker(0)
 
 	IcoWorker.onmessage = function (e) {
 		switch (e.data.state) {
 			case 0:
 				// use retained version of planet and not the updated version
-				if (planet.isRunning) {
-					sendToWorker(1)
-				}
+				planet.isRunning && sendToWorker(1)
 				break
-
 			case 1:
 				if (planet.isRunning) {
-					makeMesh(e.data.data)
+					makeMesh(planet, e.data.data)
 
 					debug({
 						vertexCount: e.data.data.vertices.length / 3,
 						currentLevel: e.data.level,
 					})
-
 					sendToWorker(1)
 				}
 				break
