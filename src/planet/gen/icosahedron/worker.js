@@ -4,7 +4,7 @@
 //	// strt+"src/planet/gen/quadtree/PerlinNoise.js"
 //);
 
-import { UTILS } from "../../../Utils.js"
+import { Utils } from "../../../utils.js"
 
 const WINDOW_WIDTH = 1
 const WINDOW_HEIGHT = 1
@@ -116,18 +116,18 @@ function Precompute(e) {
 
 	let t = (1.0 + Math.sqrt(5.0)) / 2.0
 	IcoPoints = [
-		UTILS.Vector3([-1, t, 0]),
-		UTILS.Vector3([1, t, 0]),
-		UTILS.Vector3([-1, -t, 0]),
-		UTILS.Vector3([1, -t, 0]),
-		UTILS.Vector3([0, -1, t]),
-		UTILS.Vector3([0, 1, t]),
-		UTILS.Vector3([0, -1, -t]),
-		UTILS.Vector3([0, 1, -t]),
-		UTILS.Vector3([t, 0, -1]),
-		UTILS.Vector3([t, 0, 1]),
-		UTILS.Vector3([-t, 0, -1]),
-		UTILS.Vector3([-t, 0, 1]),
+		Utils.Vector3([-1, t, 0]),
+		Utils.Vector3([1, t, 0]),
+		Utils.Vector3([-1, -t, 0]),
+		Utils.Vector3([1, -t, 0]),
+		Utils.Vector3([0, -1, t]),
+		Utils.Vector3([0, 1, t]),
+		Utils.Vector3([0, -1, -t]),
+		Utils.Vector3([0, 1, -t]),
+		Utils.Vector3([t, 0, -1]),
+		Utils.Vector3([t, 0, 1]),
+		Utils.Vector3([-t, 0, -1]),
+		Utils.Vector3([-t, 0, 1]),
 	]
 
 	RecurseIdx = [0, 3, 5, 5, 3, 4, 3, 1, 4, 5, 4, 2]
@@ -140,9 +140,9 @@ function Recurse(p1, p2, p3, center, level) {
 
 	//The Great Cull
 	if (
-		UTILS.Dot(UTILS.Multiply31(p1, 1 + MaxHeight), center) < 0.85 &&
-		UTILS.Dot(UTILS.Multiply31(p2, 1 + MaxHeight), center) < 0.85 &&
-		UTILS.Dot(UTILS.Multiply31(p3, 1 + MaxHeight), center) < 0.85
+		Utils.Dot(Utils.Multiply31(p1, 1 + MaxHeight), center) < 0.85 &&
+		Utils.Dot(Utils.Multiply31(p2, 1 + MaxHeight), center) < 0.85 &&
+		Utils.Dot(Utils.Multiply31(p3, 1 + MaxHeight), center) < 0.85
 	) {
 		return
 	}
@@ -162,15 +162,15 @@ function Recurse(p1, p2, p3, center, level) {
 
 	// The survivors after the cull
 	let edges = [
-		UTILS.Divide31(UTILS.Add33V(p1, p2), 2),
-		UTILS.Divide31(UTILS.Add33V(p2, p3), 2),
-		UTILS.Divide31(UTILS.Add33V(p3, p1), 2),
+		Utils.Divide31(Utils.Add33V(p1, p2), 2),
+		Utils.Divide31(Utils.Add33V(p2, p3), 2),
+		Utils.Divide31(Utils.Add33V(p3, p1), 2),
 	]
 	let edgeDist = []
 
 	// Their distance is evaluated
 	for (let i = 0; i < 3; i++) {
-		let distance = UTILS.distanceToPoint3DV(edges[i], center)
+		let distance = Utils.distanceToPoint3DV(edges[i], center)
 		edgeDist[i] = level > 3 ? distance > DistanceLevels[level] : false
 	}
 
@@ -200,9 +200,9 @@ function Recurse(p1, p2, p3, center, level) {
 	for (let i = 0; i < 4; i++) {
 		if (valid[i] == true) {
 			Recurse(
-				UTILS.Normalize(p[RecurseIdx[3 * i + 0]]),
-				UTILS.Normalize(p[RecurseIdx[3 * i + 1]]),
-				UTILS.Normalize(p[RecurseIdx[3 * i + 2]]),
+				Utils.Normalize(p[RecurseIdx[3 * i + 0]]),
+				Utils.Normalize(p[RecurseIdx[3 * i + 1]]),
+				Utils.Normalize(p[RecurseIdx[3 * i + 2]]),
 				center,
 				level + 1,
 			)
@@ -214,9 +214,9 @@ function AddTriangle(p1, p2, p3) {
 	// let np1 = UTILS.Multiply31(p1, Radius + (SampleNoise(p1, NoiseOpt) * Radius * MaxHeight) );
 	// let np2 = UTILS.Multiply31(p2, Radius + (SampleNoise(p2, NoiseOpt) * Radius * MaxHeight) );
 	// let np3 = UTILS.Multiply31(p3, Radius + (SampleNoise(p3, NoiseOpt) * Radius * MaxHeight) );
-	let np1 = UTILS.Multiply31(p1, Radius)
-	let np2 = UTILS.Multiply31(p2, Radius)
-	let np3 = UTILS.Multiply31(p3, Radius)
+	let np1 = Utils.Multiply31(p1, Radius)
+	let np2 = Utils.Multiply31(p2, Radius)
+	let np3 = Utils.Multiply31(p3, Radius)
 
 	MeshData.vertices.push(np3._x, np3._y, np3._z)
 	MeshData.vertices.push(np2._x, np2._y, np2._z)
@@ -233,16 +233,16 @@ function Rebuild(center) {
 	CurrentLevel = 0
 
 	for (let i = 0; i < Idx.length / 3; i++) {
-		let p1 = UTILS.Normalize(IcoPoints[Idx[i * 3 + 0]]) // triangle point 1
-		let p2 = UTILS.Normalize(IcoPoints[Idx[i * 3 + 1]]) // triangle point 2
-		let p3 = UTILS.Normalize(IcoPoints[Idx[i * 3 + 2]]) // triangle point 3
+		let p1 = Utils.Normalize(IcoPoints[Idx[i * 3 + 0]]) // triangle point 1
+		let p2 = Utils.Normalize(IcoPoints[Idx[i * 3 + 1]]) // triangle point 2
+		let p3 = Utils.Normalize(IcoPoints[Idx[i * 3 + 2]]) // triangle point 3
 		Recurse(p1, p2, p3, center, 0, p1, p2, p3)
 	}
 }
 
 function isPointInFrustum(planes, point) {
 	for (let i = 0; i < 6; i++) {
-		if (UTILS.Dot(planes[i].normal, point) + planes[i].d < 0) {
+		if (Utils.Dot(planes[i].normal, point) + planes[i].d < 0) {
 			return false
 		}
 	}
@@ -285,7 +285,7 @@ self.onmessage = function (e) {
 			break
 
 		case 1: // Build Data
-			let center = e.data.center || UTILS.Vector3([0])
+			let center = e.data.center || Utils.Vector3([0])
 			Radius = e.data.radius || 10
 			Frustumplanes = e.data.frustumplanes
 			MaxHeight = e.data.maxHeight

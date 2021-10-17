@@ -14,7 +14,7 @@ function SampleNoise(p, opt)
 
 	var f = opt.frequency;
 	var a = 1.0;
-	var dsum = UTILS.Vector3([0,0,0]);
+	var dsum = Utils.Vector3([0,0,0]);
 
 	var density = 0;
 	for (var i=0; i<opt.octaves; i++)
@@ -30,7 +30,7 @@ function SampleNoise(p, opt)
 	}
 
 	density = density / (Math.pow(1.0, opt.persistence)*opt.octaves);
-	return UTILS.clamp(density, -1.0, 1.0);
+	return Utils.clamp(density, -1.0, 1.0);
 }
 
 
@@ -749,9 +749,9 @@ class PerlinNoise
 			const rgCx = this.hash21Perm(u+0, v+1); const rgCy = this.hash21Perm(u+0+this.zOffx, v+1+this.zOffy);
 			const rgDx = this.hash21Perm(u+1, v+1); const rgDy = this.hash21Perm(u+1+this.zOffx, v+1+this.zOffy);
 
-			const rgx = UTILS.lerp( UTILS.lerp( rgAx, rgBx, fx ), UTILS.lerp( rgCx, rgDx, fx ), fy );
-			const rgy = UTILS.lerp( UTILS.lerp( rgAy, rgBy, fx ), UTILS.lerp( rgCy, rgDy, fx ), fy );
+			const rgx = Utils.lerp( Utils.lerp( rgAx, rgBx, fx ), Utils.lerp( rgCx, rgDx, fx ), fy );
+			const rgy = Utils.lerp( Utils.lerp( rgAy, rgBy, fx ), Utils.lerp( rgCy, rgDy, fx ), fy );
 
-			return UTILS.lerp( rgx, rgy, fz );
+			return Utils.lerp( rgx, rgy, fz );
 		}
 }

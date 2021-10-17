@@ -1,7 +1,7 @@
-export const UTILS = {}
+export const Utils = {}
 
 // from by: https://www.shadertoy.com/view/WttXWX
-UTILS.TripleBias32 = function (x) {
+Utils.TripleBias32 = function (x) {
 	x ^= x >> 17
 	x *= 0xed5ad4bb
 	x ^= x >> 11
@@ -11,7 +11,7 @@ UTILS.TripleBias32 = function (x) {
 	x ^= x >> 14
 	return x
 }
-UTILS.LowBias32 = function (x) {
+Utils.LowBias32 = function (x) {
 	x ^= x >> 16
 	x *= 0x7feb352d
 	x ^= x >> 15
@@ -20,7 +20,7 @@ UTILS.LowBias32 = function (x) {
 	return x
 }
 
-UTILS.SplitDouble = function (value) {
+Utils.SplitDouble = function (value) {
 	var hi = Float32Array.from([value])[0]
 	var low = value - hi
 	return [hi, low]
@@ -41,79 +41,79 @@ Object.defineProperty(String.prototype, "hashCode", {
 	},
 })
 
-UTILS.degrees_to_radians = function (degrees) {
+Utils.degrees_to_radians = function (degrees) {
 	var pi = Math.PI
 	return degrees * (pi / 180)
 }
 
-UTILS.radians_to_degrees = function (radians) {
+Utils.radians_to_degrees = function (radians) {
 	var pi = Math.PI
 	return radians * (180 / pi)
 }
 
-UTILS.lerp = function (start, end, speed) {
+Utils.lerp = function (start, end, speed) {
 	return start + (end - start) * speed
 }
 
-UTILS.lerp3 = function (p1, p2, t) {
-	var x = UTILS.lerp(p1.x, p2.x, t)
-	var y = UTILS.lerp(p1.y, p2.y, t)
-	var z = UTILS.lerp(p1.z, p2.z, t)
+Utils.lerp3 = function (p1, p2, t) {
+	var x = Utils.lerp(p1.x, p2.x, t)
+	var y = Utils.lerp(p1.y, p2.y, t)
+	var z = Utils.lerp(p1.z, p2.z, t)
 
 	return new BABYLON.Vector3(x, y, z)
 }
 
-UTILS.angleDifference = function (start, end) {
+Utils.angleDifference = function (start, end) {
 	return ((((start - end) % 360) + 540) % 360) - 180
 }
 
-UTILS.lerpAngle = function (start, end, speed) {
+Utils.lerpAngle = function (start, end, speed) {
 	//var dd = angleDifference(start, end);
 	//return start - Math.min(Math.abs(dd), speed) * Math.sign(dd);
 	return start - Math.sin(angleDifference(start, end) * speed)
 }
 
-UTILS.lengthdir_x = function (length, direction) {
+Utils.lengthdir_x = function (length, direction) {
 	return Math.cos(degrees_to_radians(direction)) * length //x
 }
 
-UTILS.lengthdir_y = function (length, direction) {
+Utils.lengthdir_y = function (length, direction) {
 	return Math.sin(degrees_to_radians(direction)) * length //y
 }
 
-UTILS.clamp = function (value, min, max) {
+Utils.clamp = function (value, min, max) {
 	return Math.max(Math.min(value, max), min)
 }
 
-UTILS.saturate = function (x) {
-	return UTILS.clamp(x, 0.0, 1.0)
+Utils.saturate = function (x) {
+	return Utils.clamp(x, 0.0, 1.0)
 }
 
-UTILS.distanceToPoint = function (x1, y1, x2, y2) {
+Utils.distanceToPoint = function (x1, y1, x2, y2) {
 	return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
 }
 
-UTILS.distanceToPoint3DV = function (p1, p2) {
+Utils.distanceToPoint3DV = function (p1, p2) {
 	return Math.sqrt(Math.pow(p1._x - p2._x, 2) + Math.pow(p1._y - p2._y, 2) + Math.pow(p1._z - p2._z, 2))
 }
 
-UTILS.distanceToPoint3D = function (x1, y1, z1, x2, y2, z2) {
+Utils.distanceToPoint3D = function (x1, y1, z1, x2, y2, z2) {
 	return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) + Math.pow(z1 - z2, 2))
 }
 
-UTILS.pointDirection = function (x1, y1, x2, y2) {
+Utils.pointDirection = function (x1, y1, x2, y2) {
 	return radians_to_degrees(Math.atan2(y2 - y1, x2 - x1)) % 360
 }
 
-UTILS.randomRange = function (min, max) {
+Utils.randomRange = function (min, max) {
 	return min + Math.random() * Math.abs(min - max)
 }
 
-UTILS.alphaNumerics = function () {
+Utils.alphaNumerics = function () {
 	return "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 }
 
-UTILS.repeat = function (value, min, max) {
+Utils.repeat = function (value, min, max) {
 	if (value > max) {
 		return min
 	} else if (value < min) {
@@ -123,7 +123,7 @@ UTILS.repeat = function (value, min, max) {
 	}
 }
 
-UTILS.cloneArray = function (arr) {
+Utils.cloneArray = function (arr) {
 	var newArray = []
 	for (var i = 0; i < arr.length; i++) {
 		newArray[i] = arr[i].slice()
@@ -131,7 +131,7 @@ UTILS.cloneArray = function (arr) {
 	return newArray
 }
 
-UTILS.checkArrayFor = function (ind, array) {
+Utils.checkArrayFor = function (ind, array) {
 	for (var i = 0; i < array.length; i++) {
 		if (array[i] == ind) {
 			return true
@@ -140,18 +140,18 @@ UTILS.checkArrayFor = function (ind, array) {
 	return false
 }
 
-UTILS.switchBase = function (n, base) {
+Utils.switchBase = function (n, base) {
 	if (n < 0) {
 		n = 0xffffffff + n + 1
 	}
 	return parseInt(n, 10).toString(base)
 }
 
-UTILS.remap = function (x, inputMin, inputMax, min, max) {
+Utils.remap = function (x, inputMin, inputMax, min, max) {
 	return ((x - inputMin) * (max - min)) / (inputMax - inputMin) + min
 }
 
-UTILS.facePoint = function (rotatingObject, pointToRotateTo) {
+Utils.facePoint = function (rotatingObject, pointToRotateTo) {
 	// a directional vector from one object to the other one
 	var direction = pointToRotateTo.subtract(rotatingObject.position)
 
@@ -205,7 +205,7 @@ UTILS.facePoint = function (rotatingObject, pointToRotateTo) {
 	}
 }
 
-UTILS.moveToTarget = function (objectToMove, pointToMoveTo) {
+Utils.moveToTarget = function (objectToMove, pointToMoveTo) {
 	var moveVector = pointToMoveTo.subtract(objectToMove.position)
 
 	if (moveVector.length() > 0.2) {
@@ -224,7 +224,7 @@ var biNormal = CalcNormal(tangent, normal);
 */
 
 // Calculate plane normal (pass in two vectors )
-UTILS.calcNormal = function (v1, v2) {
+Utils.calcNormal = function (v1, v2) {
 	var P = new BABYLON.Vector3(0, 0, 0)
 	var Q = P.add(v1)
 	var T = P.add(v2)
@@ -236,7 +236,7 @@ UTILS.calcNormal = function (v1, v2) {
 }
 
 // Simple Create Vector Function
-UTILS.createVector3D = function (point1, point2) {
+Utils.createVector3D = function (point1, point2) {
 	return new BABYLON.Vector3(point2.x - point1.x, point2.y - point1.y, point2.z - point1.z)
 }
 
@@ -246,7 +246,7 @@ UTILS.createVector3D = function (point1, point2) {
 //
 // Stripped from Babylon Path3D - see: https://github.com/BabylonJS/Babylon.js/blob/master/src/Math/babylon.math.ts#L3691
 //
-UTILS.normalVector = function (v0, vt, va) {
+Utils.normalVector = function (v0, vt, va) {
 	var normal0 //: Vector3;
 	var tgl = vt.length()
 
@@ -273,23 +273,23 @@ UTILS.normalVector = function (v0, vt, va) {
 	return normal0
 }
 
-UTILS.calculatePointOnSphere = function (p, face, babylon = false) {
-	face = UTILS.Vector3([face._x, face._y, face._z])
-	var axisA = UTILS.Vector3([face._y, face._z, face._x])
-	var axisB = UTILS.Cross(face, axisA)
+Utils.calculatePointOnSphere = function (p, face, babylon = false) {
+	face = Utils.Vector3([face._x, face._y, face._z])
+	var axisA = Utils.Vector3([face._y, face._z, face._x])
+	var axisB = Utils.Cross(face, axisA)
 
-	var ly = UTILS.Multiply33(axisB, UTILS.Vector3([p._y * 2]))
-	var lx = UTILS.Multiply33(axisA, UTILS.Vector3([p._x * 2]))
-	var pointOnCube = UTILS.Add33([face, lx, ly])
-	var pointOnSphere = UTILS.Normalize(pointOnCube)
+	var ly = Utils.Multiply33(axisB, Utils.Vector3([p._y * 2]))
+	var lx = Utils.Multiply33(axisA, Utils.Vector3([p._x * 2]))
+	var pointOnCube = Utils.Add33([face, lx, ly])
+	var pointOnSphere = Utils.Normalize(pointOnCube)
 
 	if (babylon == true) {
 		return new BABYLON.Vector3(pointOnSphere._z, pointOnSphere._y, pointOnSphere._x)
 	}
-	return UTILS.Vector3([pointOnSphere._z, pointOnSphere._y, pointOnSphere._x])
+	return Utils.Vector3([pointOnSphere._z, pointOnSphere._y, pointOnSphere._x])
 }
 
-UTILS.sphereNormal = function (p) {
+Utils.sphereNormal = function (p) {
 	return BABYLON.Vector3.Normalize(p.multiply(new BABYLON.Vector3(2, 2, 2)))
 }
 
@@ -297,31 +297,31 @@ UTILS.sphereNormal = function (p) {
 /// CUSTOM VECTOR FUNCTIONS
 ///////////////////////////////////
 
-UTILS.Vector3 = function (arr) {
+Utils.Vector3 = function (arr) {
 	if (arr.length == 1) {
 		return { _x: arr[0], _y: arr[0], _z: arr[0] }
 	}
 	return { _x: arr[0], _y: arr[1], _z: arr[2] }
 }
 
-UTILS.VecToArray = function (vec) {
+Utils.VecToArray = function (vec) {
 	return [vec._x, vec._y, vec._z]
 }
 
-UTILS.Dot = function (p1, p2) {
+Utils.Dot = function (p1, p2) {
 	return p1._x * p2._x + p1._y * p2._y + p1._z * p2._z
 }
 
-UTILS.Magnitude = function (p) {
+Utils.Magnitude = function (p) {
 	return Math.sqrt(p._x * p._x + p._y * p._y + p._z * p._z)
 }
 
-UTILS.Normalize = function (p) {
-	let mag = UTILS.Magnitude(p)
-	return UTILS.Divide31(p, mag)
+Utils.Normalize = function (p) {
+	let mag = Utils.Magnitude(p)
+	return Utils.Divide31(p, mag)
 }
 
-UTILS.Add33 = function (arr) {
+Utils.Add33 = function (arr) {
 	let r = { _x: 0, _y: 0, _z: 0 }
 	for (var i = 0; i < arr.length; i++) {
 		r._x += arr[i]._x
@@ -331,61 +331,61 @@ UTILS.Add33 = function (arr) {
 	return r
 }
 
-UTILS.Add33V = function (p1, p2) {
+Utils.Add33V = function (p1, p2) {
 	return { _x: p1._x + p2._x, _y: p1._y + p2._y, _z: p1._z + p2._z }
 }
 
-UTILS.Add31 = function (p, a) {
+Utils.Add31 = function (p, a) {
 	return { _x: p._x + a, _y: p._y + a, _z: p._z + a }
 }
 
-UTILS.Subtract33 = function (p1, p2) {
+Utils.Subtract33 = function (p1, p2) {
 	return { _x: p1._x - p2._x, _y: p1._y - p2._y, _z: p1._z - p2._z }
 }
 
-UTILS.Multiply33 = function (p1, p2) {
+Utils.Multiply33 = function (p1, p2) {
 	return { _x: p1._x * p2._x, _y: p1._y * p2._y, _z: p1._z * p2._z }
 }
 
-UTILS.Multiply31 = function (p, m) {
+Utils.Multiply31 = function (p, m) {
 	return { _x: p._x * m, _y: p._y * m, _z: p._z * m }
 }
 
-UTILS.Divide31 = function (p, d) {
+Utils.Divide31 = function (p, d) {
 	return { _x: p._x / d, _y: p._y / d, _z: p._z / d }
 }
 
-UTILS.Cross = function (left, right) {
+Utils.Cross = function (left, right) {
 	const x = left._y * right._z - left._z * right._y
 	const y = left._z * right._x - left._x * right._z
 	const z = left._x * right._y - left._y * right._x
 	return { _x: x, _y: y, _z: z }
 }
 
-UTILS.M33xV3 = function (mat, vec, arr = false) {
+Utils.M33xV3 = function (mat, vec, arr = false) {
 	res = [0, 0, 0]
-	vec = arr == true ? vec : UTILS.VecToArray(vec)
+	vec = arr == true ? vec : Utils.VecToArray(vec)
 	for (let i = 0; i < 3; i++) {
 		for (let j = 0; j < 3; j++) {
 			res[i] += mat[i][j] * vec[i]
 		}
 	}
-	return UTILS.Vector3(res)
+	return Utils.Vector3(res)
 }
 
-UTILS.cubeDirections = [
-	/* Up */ UTILS.Vector3([0, 1, 0]),
-	/* Down */ UTILS.Vector3([0, -1, 0]),
-	/* Right */ UTILS.Vector3([1, 0, 0]),
-	/* Left */ UTILS.Vector3([-1, 0, 0]),
-	/* Forward */ UTILS.Vector3([0, 0, 1]),
-	/* Back */ UTILS.Vector3([0, 0, -1]),
+Utils.cubeDirections = [
+	/* Up */ Utils.Vector3([0, 1, 0]),
+	/* Down */ Utils.Vector3([0, -1, 0]),
+	/* Right */ Utils.Vector3([1, 0, 0]),
+	/* Left */ Utils.Vector3([-1, 0, 0]),
+	/* Forward */ Utils.Vector3([0, 0, 1]),
+	/* Back */ Utils.Vector3([0, 0, -1]),
 ]
 
-UTILS.sphericalToVector = function (rho, theta, phi, degrees = false) {
+Utils.sphericalToVector = function (rho, theta, phi, degrees = false) {
 	if (degrees == true) {
-		theta = UTILS.degrees_to_radians(theta)
-		phi = UTILS.degrees_to_radians(phi)
+		theta = Utils.degrees_to_radians(theta)
+		phi = Utils.degrees_to_radians(phi)
 	}
 
 	return new BABYLON.Vector3(
@@ -395,19 +395,19 @@ UTILS.sphericalToVector = function (rho, theta, phi, degrees = false) {
 	).multiply(new BABYLON.Vector3().setAll(rho))
 }
 
-UTILS.vectorToSpherical = function (v, degrees = false) {
-	let theta = Math.acos(UTILS.clamp(v._z, -1, 1))
+Utils.vectorToSpherical = function (v, degrees = false) {
+	let theta = Math.acos(Utils.clamp(v._z, -1, 1))
 	let phi = Math.atan2(v._y, v._x)
 	phi = phi < 0 ? phi + 2 * Math.PI : phi
 
 	if (degrees == false) {
 		return { theta: theta, phi: phi }
 	} else {
-		return { theta: UTILS.radians_to_degrees(theta), phi: UTILS.radians_to_degrees(phi) }
+		return { theta: Utils.radians_to_degrees(theta), phi: Utils.radians_to_degrees(phi) }
 	}
 }
 
-UTILS.clearAllTimeoutsAndIntervals = function () {
+Utils.clearAllTimeoutsAndIntervals = function () {
 	var id = Math.max(
 		setTimeout(function () {}, 0),
 		setInterval(function () {}, 0),
@@ -422,14 +422,14 @@ UTILS.clearAllTimeoutsAndIntervals = function () {
 	console.log(i + " timeout(s) and interval(s) cleared")
 }
 
-UTILS.toPlanetUp = function (upVec, position, observer, planet) {
-	return UTILS.lerp3(
+Utils.toPlanetUp = function (upVec, position, observer, planet) {
+	return Utils.lerp3(
 		upVec,
-		UTILS.sphereNormal(observer),
+		Utils.sphereNormal(observer),
 		1 -
-			UTILS.clamp(
-				UTILS.remap(
-					UTILS.distanceToPoint3DV(planet.position, position),
+			Utils.clamp(
+				Utils.remap(
+					Utils.distanceToPoint3DV(planet.position, position),
 					planet.radius,
 					planet.radius * 3,
 					0,
@@ -441,7 +441,7 @@ UTILS.toPlanetUp = function (upVec, position, observer, planet) {
 	)
 }
 
-UTILS.loadFile = function (url) {
+Utils.loadFile = function (url) {
 	return fetch(url).then(response => {
 		if (!response.ok) {
 			throw new Error("HTTP error " + response.status) // Rejects the promise
@@ -456,7 +456,7 @@ UTILS.loadFile = function (url) {
 /// * All rights reserved.
 /// * from: demo.js
 ////////////////////////////////////////////////////////////////////
-UTILS.loadTextureData = function (textureName, callback) {
+Utils.loadTextureData = function (textureName, callback) {
 	const xhr = new XMLHttpRequest()
 	xhr.open("GET", textureName)
 	xhr.responseType = "arraybuffer"
@@ -472,7 +472,7 @@ UTILS.loadTextureData = function (textureName, callback) {
 }
 //////////////////////////////////////////////////////////////
 
-UTILS.getTextureData = function (texture) {
+Utils.getTextureData = function (texture) {
 	return {
 		data: new Uint8ClampedArray(texture.readPixels()),
 		width: texture.getSize().width,
@@ -480,9 +480,9 @@ UTILS.getTextureData = function (texture) {
 	}
 }
 
-UTILS.sampleTexture = function (texture, x, y) {
-	x = UTILS.repeat(x, 0.0, 1.0)
-	y = UTILS.repeat(y, 0.0, 1.0)
+Utils.sampleTexture = function (texture, x, y) {
+	x = Utils.repeat(x, 0.0, 1.0)
+	y = Utils.repeat(y, 0.0, 1.0)
 	x = Math.floor(texture.width * x)
 	y = Math.floor(texture.height * y)
 
@@ -494,7 +494,7 @@ UTILS.sampleTexture = function (texture, x, y) {
 	return [r, g, b, a]
 }
 
-UTILS.downloadImagesAsync = function (urls) {
+Utils.downloadImagesAsync = function (urls) {
 	return new Promise(function (resolve, reject) {
 		var pending = urls.length
 		var result = []
@@ -522,6 +522,6 @@ UTILS.downloadImagesAsync = function (urls) {
 	})
 }
 
-UTILS.planeDotCoordinate = function (plane, point) {
+Utils.planeDotCoordinate = function (plane, point) {
 	return plane.normal._x * point._x + plane.normal._y * point._y + plane.normal._z * point._z + plane.d
 }

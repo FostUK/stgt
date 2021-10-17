@@ -6,7 +6,7 @@ importScripts(
 	strt+"src/planet/gen/quadtree/PerlinNoise.js"
 );
 
-UTILS.clearAllTimeoutsAndIntervals();
+Utils.clearAllTimeoutsAndIntervals();
 
 
 
@@ -19,8 +19,8 @@ var ArrayOfLevels = [];
 var ArrayOfLevelHash = [];
 var LastArrayOfLevelHash = [];
 
-var Observer = UTILS.Vector3([0]);
-var Position = UTILS.Vector3([0]);
+var Observer = Utils.Vector3([0]);
+var Position = Utils.Vector3([0]);
 var FrustumPlanes = [];
 var Radius = 0;
 
@@ -90,7 +90,7 @@ self.onmessage = function(e)
 					if (i > currentHighestLevel){ currentHighestLevel = i; }
 				}else{
 					if (i <= currentHighestLevel){
-						if (UTILS.checkArrayFor(i, LastIndexes) == false){ d.indexes.push(i); }
+						if (Utils.checkArrayFor(i, LastIndexes) == false){ d.indexes.push(i); }
 					}
 					//d.indexes.push(i);
 				}
@@ -162,10 +162,10 @@ function createTrees()
 		ArrayOfLevelHash[i] = 0;
 	}
 
-	for (var i=0; i<UTILS.cubeDirections.length; i++)
+	for (var i=0; i<Utils.cubeDirections.length; i++)
 	{
 			Trees[i] = new QuadTree(
-					UTILS.cubeDirections[i],
+					Utils.cubeDirections[i],
 					Position, Radius,
 					StartWidth, MaxLevel, Radius
 			);

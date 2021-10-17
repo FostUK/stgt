@@ -56,26 +56,26 @@ class QuadTree
     {
 				this.info = new TreeInfo();
 
-				this.info.position = position || UTILS.Vector3([0]);
+				this.info.position = position || Utils.Vector3([0]);
         this.info.size = size || 1;
         this.info.startWidth = sw || 2;
 
-        this.info.observer = UTILS.Vector3([0]);
+        this.info.observer = Utils.Vector3([0]);
         this.info.maxLevels = levels || 4;
         this.info.maxDist = maxDist || this.info.size*2;
-        this.info.cubeFace = face || UTILS.cubeDirections[0];
+        this.info.cubeFace = face || Utils.cubeDirections[0];
     }
 
 
 
 		toSphereCoord(pos)
     {
-        var percent = UTILS.Vector3([
+        var percent = Utils.Vector3([
             pos._x / this.info.size,
             pos._z / this.info.size, 0
         ]);
-        percent = UTILS.calculatePointOnSphere(percent, this.info.cubeFace);
-        percent = UTILS.Multiply31(percent, this.info.size + SampleNoise(percent, Noise)*Noise.amplitude);
+        percent = Utils.calculatePointOnSphere(percent, this.info.cubeFace);
+        percent = Utils.Multiply31(percent, this.info.size + SampleNoise(percent, Noise)*Noise.amplitude);
         return percent;
     }
 
@@ -87,12 +87,12 @@ class QuadTree
 			if (ArrayOfLevelHash[level-1] == null){ ArrayOfLevelHash[level-1] = 0; }
 
 
-			let sphereCoord = this.toSphereCoord( UTILS.Add31(position, size/2) );
-			let realPos = UTILS.Add33([sphereCoord, Position]);
-			let normal = UTILS.Normalize(sphereCoord);
+			let sphereCoord = this.toSphereCoord( Utils.Add31(position, size/2) );
+			let realPos = Utils.Add33([sphereCoord, Position]);
+			let normal = Utils.Normalize(sphereCoord);
 
-			let dot = UTILS.Dot( normal, UTILS.Normalize(UTILS.Subtract33( Observer, Position )) );
-			if (UTILS.clamp(dot, -1, 1) < 0.5){ return; }
+			let dot = Utils.Dot( normal, Utils.Normalize(Utils.Subtract33( Observer, Position )) );
+			if (Utils.clamp(dot, -1, 1) < 0.5){ return; }
 
 
 			// let sc1 = this.toSphereCoord( UTILS.Vector3([position._x, 0, position._y]) );
@@ -108,7 +108,7 @@ class QuadTree
 			// ){ return; }
 
 
-			let dist = UTILS.distanceToPoint3DV(realPos, Observer )/this.info.maxDist;
+			let dist = Utils.distanceToPoint3DV(realPos, Observer )/this.info.maxDist;
 			//let centerDist = UTILS.distanceToPoint3DV(Position, Observer)/this.info.maxDist;
 
 
@@ -132,10 +132,10 @@ class QuadTree
 			for (var x=0, i=0; x<w; x++){
 					for (var y=0; y<w; y++, i++)
 					{
-							let pos = UTILS.Multiply31(
-								UTILS.Divide31(UTILS.Vector3([x, 0, y]), w), size
+							let pos = Utils.Multiply31(
+								Utils.Divide31(Utils.Vector3([x, 0, y]), w), size
 							);
-							pos = UTILS.Add33([position, pos]);
+							pos = Utils.Add33([position, pos]);
 
 							this.recurse(
 								pos, size/w,
@@ -154,8 +154,8 @@ class QuadTree
 				for (var x= -tree.info.startWidth/2, i=0; x<tree.info.startWidth/2; x++){
             for (var y= -tree.info.startWidth/2; y<tree.info.startWidth/2; y++, i++)
             {
-                let pos = UTILS.Multiply31(
-									UTILS.Divide31(UTILS.Vector3([x, 0, y]), tree.info.startWidth), tree.info.size
+                let pos = Utils.Multiply31(
+									Utils.Divide31(Utils.Vector3([x, 0, y]), tree.info.startWidth), tree.info.size
 								);
 
 								tree.recurse(
@@ -234,19 +234,19 @@ function buildMeshFromData(array, nodemap, radius)
 function makeGrid(data, strt, detail, size, level, index, radius, totalWidth, cubeFace, indexOffset)
 {
     radius = radius || 1;
-    cubeFace = cubeFace || UTILS.cubeDirections[0];
+    cubeFace = cubeFace || Utils.cubeDirections[0];
     totalWidth = totalWidth || 1;
 		//console.log(size);
 
 		var getVertex = function(x, y){
-			return vertex = UTILS.Vector3([
+			return vertex = Utils.Vector3([
 					( strt._x + ( (x * size) / detail )) / totalWidth,
 					( strt._z + ( ((detail - y) * size) / detail )) / totalWidth, 0
 			]);
 		}
 
 		var makeVertex = function(x, y){
-			return UTILS.calculatePointOnSphere(getVertex(x,y), cubeFace);
+			return Utils.calculatePointOnSphere(getVertex(x,y), cubeFace);
 		}
 
 		var computeNormalFromNoise = function(v, f, depth)
@@ -256,10 +256,10 @@ function makeGrid(data, strt, detail, size, level, index, radius, totalWidth, cu
 			let dfx = SampleNoise(scx, Noise);
 			let dfy = SampleNoise(scy, Noise);
 
-			let p = UTILS.Multiply31(v, f*Noise.amplitude + radius*depth);
-			return UTILS.Normalize( UTILS.Cross(
-				UTILS.Subtract33( UTILS.Multiply31(scx, dfx*Noise.amplitude + radius*depth), p),
-				UTILS.Subtract33( UTILS.Multiply31(scy, dfy*Noise.amplitude + radius*depth), p)
+			let p = Utils.Multiply31(v, f*Noise.amplitude + radius*depth);
+			return Utils.Normalize( Utils.Cross(
+				Utils.Subtract33( Utils.Multiply31(scx, dfx*Noise.amplitude + radius*depth), p),
+				Utils.Subtract33( Utils.Multiply31(scy, dfy*Noise.amplitude + radius*depth), p)
 			) );
 		}
 
@@ -269,13 +269,13 @@ function makeGrid(data, strt, detail, size, level, index, radius, totalWidth, cu
             let sphereCoord = makeVertex(x, y);
 						let noise = SampleNoise(sphereCoord, Noise);
 
-            let p = UTILS.Multiply31(sphereCoord, radius + noise*Noise.amplitude);
+            let p = Utils.Multiply31(sphereCoord, radius + noise*Noise.amplitude);
 
             data.vertices.push(
                 p._x, p._y, p._z /// SPHERICAL COORD
             );
 
-						let dist = UTILS.distanceToPoint3DV(UTILS.Add33([sphereCoord, Position]), Observer )/radius;
+						let dist = Utils.distanceToPoint3DV(Utils.Add33([sphereCoord, Position]), Observer )/radius;
 						//( (size/radius)*3000 )
 						var n = computeNormalFromNoise(sphereCoord, noise, Math.pow( (size/radius)*3000, 1/(level) ) * 10);
             data.normals.push(n._x, n._y, n._z);
@@ -529,7 +529,7 @@ function resolveIndices(detail, data, nDat, offset)
 function isPointInFrustum(frustumPlanes, point)
 {
     for (let i = 0; i < 6; i++) {
-        if (UTILS.planeDotCoordinate(frustumPlanes[i], point) < 0) {
+        if (Utils.planeDotCoordinate(frustumPlanes[i], point) < 0) {
 						return false;
         }
     }

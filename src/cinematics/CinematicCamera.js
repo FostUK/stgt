@@ -31,7 +31,7 @@ class CinematicCamera extends BABYLON.TargetCamera
 			// this.rotation = BABYLON.Vector3.RotationFromAxis(binormal, normal, tangent); //correct
 			// this.rotation = BABYLON.Vector3.RotationFromAxis(tangent, normal, binormal);
 			// this.upVector = normal;
-			this.setTarget(this.path.getPointAt(UTILS.clamp(this.pathDistance+EPSILON, 0, 1)));
+			this.setTarget(this.path.getPointAt(Utils.clamp(this.pathDistance+EPSILON, 0, 1)));
 
 			this.pathDistance += speed;
 			this.pathDistance = Math.min(Math.max(this.pathDistance, 0.0), 1.0-EPSILON);

@@ -1,4 +1,4 @@
-import { UTILS } from './Utils.js'
+import { Utils } from './utils.js'
 
 export const loadResources = (callback, scene) => {
 	var load = function (state) {
@@ -34,27 +34,27 @@ var ICOPLANET_FRAGMENT = ""
 
 function loadShaders(callback) {
 	Promise.all([
-		UTILS.loadFile("src/planet/shdr/Base_Vertex.glsl"), //data 0
-		UTILS.loadFile("src/planet/shdr/PBRFrag.glsl"), //data 1
-		UTILS.loadFile("src/planet/shdr/Tools.glsl"), //data 2
-		UTILS.loadFile("src/planet/shdr/noise/SimplexNoise.glsl"), //data 3
-		UTILS.loadFile("src/planet/shdr/IcoPlanetVertex.glsl"), //data 4
-		UTILS.loadFile("src/planet/shdr/IcoPlanetFragment.glsl"), //data 5
+		Utils.loadFile("src/planet/shdr/Base_Vertex.glsl"), //data 0
+		Utils.loadFile("src/planet/shdr/PBRFrag.glsl"), //data 1
+		Utils.loadFile("src/planet/shdr/Tools.glsl"), //data 2
+		Utils.loadFile("src/planet/shdr/noise/SimplexNoise.glsl"), //data 3
+		Utils.loadFile("src/planet/shdr/IcoPlanetVertex.glsl"), //data 4
+		Utils.loadFile("src/planet/shdr/IcoPlanetFragment.glsl"), //data 5
 
-		UTILS.loadFile("src/planet/shdr/noise/Cellular3D.glsl"), //data 6
-		UTILS.loadFile("src/planet/shdr/noise/SNoise.glsl"), //data 7
+		Utils.loadFile("src/planet/shdr/noise/Cellular3D.glsl"), //data 6
+		Utils.loadFile("src/planet/shdr/noise/SNoise.glsl"), //data 7
 
-		UTILS.loadFile("src/planet/shdr/PostProcess.glsl"), //data 8
-		UTILS.loadFile("src/planet/shdr/ocean/Ocean.glsl"), //data 9
+		Utils.loadFile("src/planet/shdr/PostProcess.glsl"), //data 8
+		Utils.loadFile("src/planet/shdr/ocean/Ocean.glsl"), //data 9
 
-		UTILS.loadFile("src/planet/shdr/noise/PrecomputeHash.glsl"), //data 10
+		Utils.loadFile("src/planet/shdr/noise/PrecomputeHash.glsl"), //data 10
 
-		UTILS.loadFile("src/planet/shdr/atmosphere/Eric_B.atmosphere.glsl"), //data 11
-		UTILS.loadFile("src/planet/shdr/atmosphere/Sean_O.atmosphere.glsl"), //data 12
+		Utils.loadFile("src/planet/shdr/atmosphere/Eric_B.atmosphere.glsl"), //data 11
+		Utils.loadFile("src/planet/shdr/atmosphere/Sean_O.atmosphere.glsl"), //data 12
 
-		UTILS.loadFile("src/planet/shdr/planet/TerrainTransform.glsl"), //data 13
+		Utils.loadFile("src/planet/shdr/planet/TerrainTransform.glsl"), //data 13
 
-		UTILS.loadFile("src/planet/shdr/PostProcessTools.glsl"), //data 14
+		Utils.loadFile("src/planet/shdr/PostProcessTools.glsl"), //data 14
 	]).then(function (data) {
 		BASE_VERTEX = data[0]
 		BASE_PBR_FRAGMENT = data[1]
@@ -158,7 +158,7 @@ const IRRADIANCE_TEXTURE_HEIGHT = 16
 
 function loadAtmosphereDataTextures(callback, scene) {
 	// Atmosphere Shader Textures
-	UTILS.loadTextureData("res/atmosphere/irradiance.raw", function (data) {
+	Utils.loadTextureData("res/atmosphere/irradiance.raw", function (data) {
 		IRRADIANCE_TEXTURE = new BABYLON.RawTexture(
 			data,
 			IRRADIANCE_TEXTURE_WIDTH,
@@ -172,7 +172,7 @@ function loadAtmosphereDataTextures(callback, scene) {
 		)
 	})
 
-	UTILS.loadTextureData("res/atmosphere/inscatter.raw", function (data) {
+	Utils.loadTextureData("res/atmosphere/inscatter.raw", function (data) {
 		SCATTERING_TEXTURE = new BABYLON.RawTexture3D(
 			data,
 			SCATTERING_TEXTURE_WIDTH,
@@ -187,7 +187,7 @@ function loadAtmosphereDataTextures(callback, scene) {
 		)
 	})
 
-	UTILS.loadTextureData("res/atmosphere/transmittance.raw", function (data) {
+	Utils.loadTextureData("res/atmosphere/transmittance.raw", function (data) {
 		TRANSMITTANCE_TEXTURE = new BABYLON.RawTexture(
 			data,
 			TRANSMITTANCE_TEXTURE_WIDTH,

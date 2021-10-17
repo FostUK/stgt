@@ -18,8 +18,8 @@ var Noise = {
 };
 
 
-var Observer = UTILS.Vector3([0]);
-var Position = UTILS.Vector3([0]);
+var Observer = Utils.Vector3([0]);
+var Position = Utils.Vector3([0]);
 
 
 self.onmessage = function(e)
