@@ -1,6 +1,6 @@
 import { Utils } from './utils.js'
 
-export const loadResources = (callback, scene) => {
+export const loadResources = (callback, scene, canvas) => {
 	var load = function (state) {
 		switch (state) {
 			case 0:
@@ -13,7 +13,7 @@ export const loadResources = (callback, scene) => {
 				loadAssets(() => load(3), scene)
 				break
 			case 3:
-				setupCompGLProgram(() => load(4))
+				setupCompGLProgram(() => load(4), canvas)
 				break
 			default:
 				callback()
@@ -237,7 +237,7 @@ function loadAtmosphereDataTextures(callback, scene) {
 export let COMP_GL = null
 export let COMP_GL_PROGRAM = null
 
-function setupCompGLProgram(callback) {
+function setupCompGLProgram(callback, canvas) {
 	function getShader(gl, source, type) {
 		let sh = gl.createShader(type)
 		gl.shaderSource(sh, source)
