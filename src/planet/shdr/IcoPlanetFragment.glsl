@@ -1,15 +1,8 @@
-
-
 precision highp float;
 #include<Tools>
 #include<Noise3D>
 
-
-
 precision highp float;
-
-
-
 
 // Varying
 varying vec3 vPosition;
@@ -23,18 +16,11 @@ uniform lowp float radius;
 uniform vec3 lightDir;
 uniform vec3 cameraPosition;
 
-
 uniform sampler2D grassTexture[5];
 uniform sampler2D rockTexture[5];
 
-
-
-
-
 const float textureScale = 10000.0;
 const float weightsSharpness = 40.0;
-
-
 
 #define SC (250.0)
 
@@ -42,10 +28,6 @@ struct HeightColor {
 	vec3 diffuse;
 	vec3 normal;
 };
-
-
-
-
 
 vec3 makeRock(vec3 p, vec3 n)
 {

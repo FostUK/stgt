@@ -19,28 +19,28 @@ uniform sampler2D textureSampler;
 
 
 struct Camera {
-    vec3 position;
-    vec3 direction;
+	vec3 position;
+	vec3 direction;
 
-    float fov;
-    float far;
-    float near;
+	float fov;
+	float far;
+	float near;
 
-    mat4 view;
-    mat4 world;
-    mat4 transform;
-    mat4 projection;
+	mat4 view;
+	mat4 world;
+	mat4 transform;
+	mat4 projection;
 };
 
 
 struct Planet {
-		vec3 position;
-		float radius;
-		float maxHeight;
+	vec3 position;
+	float radius;
+	float maxHeight;
 
-		vec3 rCoeff;
-		vec3 mCoeff;
-		float mieG;
+	vec3 rCoeff;
+	vec3 mCoeff;
+	float mieG;
 };
 
 
@@ -124,18 +124,14 @@ vec3 combineScenes()
 	return color;
 }
 
-
-
-
-
 void main(void)
 {
-		float marginSize = 0.1;
-		if(vUV.y < marginSize || vUV.y > 1.0-marginSize){
-				gl_FragColor = vec4(vec3(0.0), 1.0);
-				return;
-		}
+	float marginSize = 0.1;
+	if (vUV.y < marginSize || vUV.y > 1.0-marginSize){
+		gl_FragColor = vec4(vec3(0.0), 1.0);
+		return;
+	}
 
-		gl_FragColor = vec4(combineScenes(), 1.0);
-		/* gl_FragColor = vec4(texture(textureSampler, vUV)); */
+	gl_FragColor = vec4(combineScenes(), 1.0);
+	/* gl_FragColor = vec4(texture(textureSampler, vUV)); */
 }
