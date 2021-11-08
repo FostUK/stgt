@@ -5,7 +5,7 @@ import {
 	TRANSMITTANCE_TEXTURE,
 } from "./loader.js"
 
-export const postProcess = (main, planet, light) => {
+export const postProcess = main => {
 	const depthRenderer = main.scene.enableDepthRenderer(main.camera, false, true)
 
 	const postProcessEffect = new BABYLON.PostProcess(
@@ -65,23 +65,23 @@ export const postProcess = (main, planet, light) => {
 	postProcessEffect.onApply = function (effect) {
 		effect.setFloat("TIME", main.time)
 
-		effect.setFloat("planet.radius", planet.radius)
-		effect.setFloat("planet.maxHeight", planet.maxHeight)
-		effect.setVector3("planet.position", planet.getAbsolutePosition())
+		effect.setFloat("planet.radius", main.planet.radius)
+		effect.setFloat("planet.maxHeight", main.planet.maxHeight)
+		effect.setVector3("planet.position", main.planet.getAbsolutePosition())
 
-		effect.setInt("octaves", planet.properties.octaves)
-		effect.setFloat("frequency", planet.properties.frequency)
-		effect.setFloat("amplitude", planet.properties.amplitude)
-		effect.setFloat("roughness", planet.properties.roughness)
-		effect.setFloat("persistence", planet.properties.persistence)
-		effect.setFloat("warpAmplitude", planet.properties.warpAmplitude)
-		effect.setFloat("warpFrequency", planet.properties.warpFrequency)
+		effect.setInt("octaves", main.planet.properties.octaves)
+		effect.setFloat("frequency", main.planet.properties.frequency)
+		effect.setFloat("amplitude", main.planet.properties.amplitude)
+		effect.setFloat("roughness", main.planet.properties.roughness)
+		effect.setFloat("persistence", main.planet.properties.persistence)
+		effect.setFloat("warpAmplitude", main.planet.properties.warpAmplitude)
+		effect.setFloat("warpFrequency", main.planet.properties.warpFrequency)
 
-		effect.setVector3("planet.rCoeff", planet.properties.rCoeff)
-		effect.setVector3("planet.mCoeff", planet.properties.mCoeff)
-		effect.setFloat("planet.mieG", planet.properties.mieG)
+		effect.setVector3("planet.rCoeff", main.planet.properties.rCoeff)
+		effect.setVector3("planet.mCoeff", main.planet.properties.mCoeff)
+		effect.setFloat("planet.mieG", main.planet.properties.mieG)
 
-		effect.setVector3("lightDir", light.direction.multiply(new BABYLON.Vector3(-1, -1, -1)))
+		effect.setVector3("lightDir", main.light.direction.multiply(new BABYLON.Vector3(-1, -1, -1)))
 
 		effect.setTexture("depthMap", depthRenderer.getDepthMap())
 
@@ -104,6 +104,6 @@ export const postProcess = (main, planet, light) => {
 		effect.setTexture("scattering_texture", SCATTERING_TEXTURE)
 		effect.setTexture("transmittance_texture", TRANSMITTANCE_TEXTURE)
 		effect.setTexture("single_mie_scattering_texture", SINGLE_MIE_SCATTERING_TEXTURE)
-		effect.setTexture("permutationTexture", planet.permutationTexture)
+		effect.setTexture("permutationTexture", main.planet.permutationTexture)
 	}
 }

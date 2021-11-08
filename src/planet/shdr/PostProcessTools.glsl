@@ -84,15 +84,6 @@ vec3 getUVRayScreenSpace()
     return normalize(dir);
 }
 
-
-
-
-
-
-
-
-
-
 //anamorphic-ish flares from: https://www.shadertoy.com/view/MlsfRl
 vec3 flares(sampler2D tex, vec2 uv, float threshold, float intensity, float stretch, float brightness)
 {

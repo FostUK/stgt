@@ -21,7 +21,8 @@
 	},
 	"homepage": "https://github.com/TheNosiriN/BabylonJS-Planets#readme",
 	"dependencies": {
-		"express": "^4.17.1"
+		"express": "^4.17.1",
+		"babylonjs": "^5.0.0-alpha.60"
 	},
 	"devDependencies": {
 		"prettier": "^2.4.1"

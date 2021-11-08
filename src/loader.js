@@ -91,7 +91,7 @@ let ASSET_MANAGER = null
 export let ROCK_ONE_TEXTURE = []
 export let GRASS_ONE_TEXTURE = []
 
-function loadAssets(callback, scene) {
+const loadAssets = (callback, scene) => {
 	ASSET_MANAGER = new BABYLON.AssetsManager(scene)
 
 	ASSET_MANAGER.onProgress = function (remainingCount, totalCount, lastFinishedTask) {

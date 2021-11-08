@@ -2,15 +2,12 @@ precision highp float;
 precision highp sampler2D;
 precision highp sampler3D;
 
-
 #extension GL_EXT_shader_texture_lod : enable
 #extension GL_OES_standard_derivatives : enable
 
 
 #include<Tools>
 #include<Noise3D>
-
-
 
 varying vec2 vUV;
 uniform float TIME;
@@ -51,19 +48,11 @@ uniform Camera camera;
 uniform Planet planet;
 uniform vec3 lightDir;
 
-
 const int MAX_MARCHING_STEPS = 256;
 const int MAX_SHADOW_STEPS = 32;
 const float EPSILON = 0.01;
 
-
-
-
-
 #include<PostProcessTools>
-
-
-
 #include<PrecomputedAtmosphericScattering>
 #include<Ocean>
 
@@ -114,7 +103,7 @@ vec3 combineScenes()
 	sunuv.x *= screenSize.x/screenSize.y;
 
 	if (sunvis.r > 0.0){
-		/* color.xyz += lensflare(uv*2.0, sunuv*2.0) * vec3(.8, .7, .3) * 3.0;//vec3(0.369,0.200,0.620) */
+		 color.xyz += lensflare(uv*2.0, sunuv*2.0) * vec3(.8, .7, .3) * 3.0;//vec3(0.369,0.200,0.620) */
 	}
 
 
