@@ -2,8 +2,6 @@ import { Utils } from "../../../utils.js"
 import { rebuild } from "./build.js"
 //TODO could vector utils be babylon vectors?
 
-import { precompute } from "./pre-compute.js"
-
 //function isPointInFrustum(planes, point) {
 //	for (let i = 0; i < 6; i++) {
 //		if (Utils.Dot(planes[i].normal, point) + planes[i].d < 0) {
@@ -35,9 +33,10 @@ const makeSharedData = meshData => {
 	return obj
 }
 
+
+//TODO this does nothing now but might be used to init planet props at some point.
 const initialise = data => {
 	const state = data.state
-	precompute(data)
 	postMessage({ state })
 }
 
@@ -56,6 +55,4 @@ const build = inData => {
 	})
 }
 
-const dispatcher = [initialise, build]
-
-self.onmessage = e => dispatcher[e.data.state](e.data)
+self.onmessage = e => [initialise, build][e.data.state](e.data)

@@ -67,9 +67,9 @@ HeightColor makeSnowHeightColor(vec3 fp, vec3 rp, vec3 fn, vec3 rn)
 	vec3 texPos = vPosition/radius;
 	vec3 top = makeSnow(rp, rn);//triplanarMap(grassTexture[0], texPos, flatNormal, textureScale);
 	vec3 side = mix(
-	makeRock(rp, rn),
-	triplanarMap(rockTexture[0], texPos, fn, textureScale),
-	n
+		makeRock(rp, rn),
+		triplanarMap(rockTexture[0], texPos, fn, textureScale),
+		n
 	);
 	vec3 topN = triplanarMap(rockTexture[1], texPos, rn, textureScale);
 	vec3 sideN = triplanarMap(rockTexture[1], texPos, rn, textureScale);
@@ -91,9 +91,9 @@ HeightColor makeRockGrassHeightColor(vec3 fp, vec3 rp, vec3 fn, vec3 rn)
 
 	vec3 texPos = vPosition/radius;
 	vec3 top = mix(
-	makeRock(rp, rn),
-	triplanarMap(grassTexture[0], texPos, fn, textureScale),
-	fbm31Tex(rp*655366.0)
+		makeRock(rp, rn),
+		triplanarMap(grassTexture[0], texPos, fn, textureScale),
+		fbm31Tex(rp*655366.0)
 	);
 	vec3 side = top;
 	vec3 topN = triplanarMap(rockTexture[1], texPos, rn, textureScale);
@@ -122,21 +122,7 @@ vec3 calculateNormal(vec3 p, float origin)
 	(scx * (radius + (dfx * radius * maxHeight))) - p,
 	(scy * (radius + (dfy * radius * maxHeight))) - p
 	));
-
-	/* vec3 P = vec3(-4, 4, 0) * 0.01;
-
-	vec3 B = vec3(
-			fbm(normalize(p+P.xzz)),
-			fbm(normalize(p+P.zxz)),
-			fbm(normalize(p+P.zzx))
-	) - origin;
-
-	vec3 N = normalize(p);
-	B = (B-N*dot(B,N));
-	return normalize(N+B); */
 }
-
-
 
 
 void main(void)
@@ -153,26 +139,13 @@ void main(void)
 
 	flatNormal = roundNormal;
 
-	//vec3 norm = normalize(vOriginalPos + noiseVal.yzw);
-	/* float deform = fbm31Tex((roundPos/radius)*80000.0);
-	flatNormal = flatNormal + deform;
-	roundNormal = roundNormal + deform; */
 	HeightColor snow = makeSnowHeightColor(flatPos/radius, roundPos/radius, flatNormal, roundNormal);
 	HeightColor rock = makeRockGrassHeightColor(flatPos/radius, roundPos/radius, flatNormal, roundNormal);
 
 	vec3 diffuse = mix(rock.diffuse, snow.diffuse, saturate(noiseVal/2.0));
 
-	/* vec3 beach = vec3(0.761, 0.698, 0.502);
+	vec3 beach = vec3(0.761, 0.698, 0.502);
 	vec3 grass = vec3(0.1, 0.5, 0.2);
-
-	diffuse = mix(diffuse, beach, smoothstep(0.01, 0.0, noiseVal));
-	diffuse = mix(diffuse, grass, smoothstep(0.01, 0.0, noiseVal)*smoothstep(0.5, 0.01, noiseVal)); */
-
-	/* vec3 normal = mix(
-		triplanarNormal(rockTexture[0], roundPos, roundNormal, 5.0, 10.0),
-		triplanarNormal(grassTexture[0], roundPos, roundNormal, 5.0, 10.0),
-		saturate(noiseVal)
-	); */
 	vec3 normal = roundNormal;
 
 	vec3 color = diffuse;

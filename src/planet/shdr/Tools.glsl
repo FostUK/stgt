@@ -24,7 +24,6 @@ vec3 triplanarMap(sampler2D tex, vec3 p, vec3 n, float scale)
             +texture(tex,p.xz).rgb*n.y*n.y);
 }
 
-
 vec3 triplanarNormal(sampler2D tex, vec3 p, vec3 N, float strength, float scale)
 {
     vec3 P = vec3(-4, 4, 0) * 0.01;
@@ -97,7 +96,7 @@ vec3 sphericalToVector(float u, float v)
 
 
 
-vec2 UV( vec3 position ){
+vec2 UV( vec3 position ) {
 	return vec2( saturate(((atan(position.z, position.x) / 3.141592654) + 1.0) / 2.0), (0.5-(asin(position.y)/3.141592654)) );
 }
 

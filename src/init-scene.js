@@ -22,6 +22,7 @@ export const initScene = (main, scene) => {
 			name: "Earth",
 			position: new BABYLON.Vector3(0, 0, 0),
 			radius: 1000, //100000//6371000
+			maxHeight: 0.01
 		},
 		scene,
 	)
