@@ -1,10 +1,8 @@
-//let strt = "../../../../";
-//importScripts(
-//	strt+"src/Utils.js",
-//	// strt+"src/planet/gen/quadtree/PerlinNoise.js"
-//);
-
 import { Utils } from "../../../utils.js"
+//TODO could vector utils be babylon vectors?
+
+import { precompute, icoIndices, icoRecurseIndices } from "./ico-sphere.js"
+import { MaxLevel } from "./config.js"
 
 const WINDOW_WIDTH = 1
 const WINDOW_HEIGHT = 1
@@ -12,128 +10,14 @@ const WINDOW_HEIGHT = 1
 const PERMUTATION_TABLE_SIZE = 512
 
 var MeshData = null
-var StartRes = 5
-var MaxLevel = 18
+
 var CurrentLevel = 0
 var Radius = 10
 var MaxHeight = 1
 var Position = null
 var Frustumplanes = []
 
-// compute distance levels
-var DistanceLevels = []
-var TriangleSizes = []
-
-// icosahedron
-var Idx = []
-var IcoPoints = []
-var RecurseIdx = []
-
-var NoiseOpt = {}
-
-function Precompute(e) {
-	// compute distance levels
-	// for (var i=1; i<MaxLevel; i++){
-
-	// }
-
-	NoiseOpt = e.properties
-	// NoiseOpt.noise = new SimplexNoise(e.seed);
-	// NoiseOpt.noise = new PerlinNoise(makePermTable(e.seed, PERMUTATION_TABLE_SIZE).perm);
-
-	for (var i = 0; i < MaxLevel; i++) {
-		let ratio = StartRes
-		let size = StartRes / Math.pow(3, i / 1.8)
-		DistanceLevels[i] = ratio * size
-	}
-
-	// construct icosahedron
-	Idx = [
-		0,
-		11,
-		5,
-		0,
-		5,
-		1,
-		0,
-		1,
-		7,
-		0,
-		7,
-		10,
-		0,
-		10,
-		11,
-		1,
-		5,
-		9,
-		5,
-		11,
-		4,
-		11,
-		10,
-		2,
-		10,
-		7,
-		6,
-		10,
-		7,
-		6,
-		7,
-		1,
-		8,
-		3,
-		9,
-		4,
-		3,
-		4,
-		2,
-		3,
-		2,
-		6,
-		3,
-		6,
-		8,
-		3,
-		8,
-		9,
-		4,
-		9,
-		5,
-		2,
-		4,
-		11,
-		6,
-		2,
-		10,
-		8,
-		6,
-		7,
-		9,
-		8,
-		1,
-	]
-
-	let t = (1.0 + Math.sqrt(5.0)) / 2.0
-	IcoPoints = [
-		Utils.Vector3([-1, t, 0]),
-		Utils.Vector3([1, t, 0]),
-		Utils.Vector3([-1, -t, 0]),
-		Utils.Vector3([1, -t, 0]),
-		Utils.Vector3([0, -1, t]),
-		Utils.Vector3([0, 1, t]),
-		Utils.Vector3([0, -1, -t]),
-		Utils.Vector3([0, 1, -t]),
-		Utils.Vector3([t, 0, -1]),
-		Utils.Vector3([t, 0, 1]),
-		Utils.Vector3([-t, 0, -1]),
-		Utils.Vector3([-t, 0, 1]),
-	]
-
-	RecurseIdx = [0, 3, 5, 5, 3, 4, 3, 1, 4, 5, 4, 2]
-}
-
-function Recurse(p1, p2, p3, center, level) {
+const recurse = (p1, p2, p3, center, level) => {
 	if (level > CurrentLevel) {
 		CurrentLevel = level
 	}
@@ -176,7 +60,7 @@ function Recurse(p1, p2, p3, center, level) {
 
 	// Add Triangle
 	if ((edgeDist[0] && edgeDist[1] && edgeDist[2]) || level >= MaxLevel) {
-		AddTriangle(p1, p2, p3)
+		addTriangle(p1, p2, p3)
 		return
 	}
 
@@ -199,10 +83,10 @@ function Recurse(p1, p2, p3, center, level) {
 
 	for (let i = 0; i < 4; i++) {
 		if (valid[i] == true) {
-			Recurse(
-				Utils.Normalize(p[RecurseIdx[3 * i + 0]]),
-				Utils.Normalize(p[RecurseIdx[3 * i + 1]]),
-				Utils.Normalize(p[RecurseIdx[3 * i + 2]]),
+			recurse(
+				Utils.Normalize(p[icoRecurseIndices[3 * i + 0]]),
+				Utils.Normalize(p[icoRecurseIndices[3 * i + 1]]),
+				Utils.Normalize(p[icoRecurseIndices[3 * i + 2]]),
 				center,
 				level + 1,
 			)
@@ -210,7 +94,7 @@ function Recurse(p1, p2, p3, center, level) {
 	}
 }
 
-function AddTriangle(p1, p2, p3) {
+const addTriangle = (p1, p2, p3) => {
 	// let np1 = UTILS.Multiply31(p1, Radius + (SampleNoise(p1, NoiseOpt) * Radius * MaxHeight) );
 	// let np2 = UTILS.Multiply31(p2, Radius + (SampleNoise(p2, NoiseOpt) * Radius * MaxHeight) );
 	// let np3 = UTILS.Multiply31(p3, Radius + (SampleNoise(p3, NoiseOpt) * Radius * MaxHeight) );
@@ -226,17 +110,17 @@ function AddTriangle(p1, p2, p3) {
 	MeshData.indices.push(len - 3, len - 2, len - 1)
 }
 
-function Rebuild(center) {
+const rebuild = center => {
 	//delete MeshData
 	MeshData = new MeshDataClass()
 
 	CurrentLevel = 0
 
-	for (let i = 0; i < Idx.length / 3; i++) {
-		let p1 = Utils.Normalize(IcoPoints[Idx[i * 3 + 0]]) // triangle point 1
-		let p2 = Utils.Normalize(IcoPoints[Idx[i * 3 + 1]]) // triangle point 2
-		let p3 = Utils.Normalize(IcoPoints[Idx[i * 3 + 2]]) // triangle point 3
-		Recurse(p1, p2, p3, center, 0, p1, p2, p3)
+	for (let i = 0; i < icoIndices.length / 3; i++) {
+		let p1 = Utils.Normalize(IcoPoints[icoIndices[i * 3 + 0]]) // triangle point 1
+		let p2 = Utils.Normalize(IcoPoints[icoIndices[i * 3 + 1]]) // triangle point 2
+		let p3 = Utils.Normalize(IcoPoints[icoIndices[i * 3 + 2]]) // triangle point 3
+		recurse(p1, p2, p3, center, 0, p1, p2, p3)
 	}
 }
 
@@ -249,7 +133,7 @@ function isPointInFrustum(planes, point) {
 	return true
 }
 
-function makeSharedData(meshData) {
+const makeSharedData = meshData => {
 	let obj = {}
 
 	try {
@@ -271,17 +155,20 @@ function makeSharedData(meshData) {
 	return obj
 }
 
-self.onmessage = function (e) {
-	var state = e.data.state
+let IcoPoints
+let DistanceLevels
+
+self.onmessage = e => {
+	const state = e.data.state
 
 	switch (state) {
 		case 0: // Setup worker
-			// WINDOW_WIDTH = e.data.windowWidth;
-			// WINDOW_HEIGHT = e.data.windowHeight;
+			const { icoPoints, distanceLevels, noiseOptions } = precompute(e.data)
 
-			Precompute(e.data)
+			IcoPoints = icoPoints //TODO stop sharing with module "globals"
+			DistanceLevels = distanceLevels //TODO stop sharing with module "globals"
 
-			postMessage({ state: e.data.state })
+			postMessage({ state })
 			break
 
 		case 1: // Build Data
@@ -290,16 +177,12 @@ self.onmessage = function (e) {
 			Frustumplanes = e.data.frustumplanes
 			MaxHeight = e.data.maxHeight
 			Position = e.data.position
-
-			// WINDOW_WIDTH = e.data.windowWidth;
-			// WINDOW_HEIGHT = e.data.windowHeight;
-
-			Rebuild(center)
-			let obj = makeSharedData(MeshData)
+			rebuild(center)
+			const data = makeSharedData(MeshData)
 
 			postMessage({
-				state: e.data.state,
-				data: obj,
+				state,
+				data,
 				level: CurrentLevel,
 			})
 			break

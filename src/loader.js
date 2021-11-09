@@ -44,7 +44,7 @@ function loadShaders(callback) {
 		Utils.loadFile("src/planet/shdr/noise/Cellular3D.glsl"), //data 6
 		Utils.loadFile("src/planet/shdr/noise/SNoise.glsl"), //data 7
 
-		Utils.loadFile("src/planet/shdr/PostProcess.glsl"), //data 8
+		Utils.loadFile("src/planet/shdr/post/post-process.glsl"), //data 8
 		Utils.loadFile("src/planet/shdr/ocean/Ocean.glsl"), //data 9
 
 		Utils.loadFile("src/planet/shdr/noise/PrecomputeHash.glsl"), //data 10
@@ -54,7 +54,8 @@ function loadShaders(callback) {
 
 		Utils.loadFile("src/planet/shdr/planet/TerrainTransform.glsl"), //data 13
 
-		Utils.loadFile("src/planet/shdr/PostProcessTools.glsl"), //data 14
+		Utils.loadFile("src/planet/shdr/post/post-process-tools.glsl"), //data 14
+		Utils.loadFile("src/planet/shdr/post/lens-flares.glsl"), //data 15
 	]).then(function (data) {
 		BASE_VERTEX = data[0]
 		BASE_PBR_FRAGMENT = data[1]
@@ -70,6 +71,7 @@ function loadShaders(callback) {
 
 		BABYLON.Effect.IncludesShadersStore["Ocean"] = data[9]
 		BABYLON.Effect.IncludesShadersStore["PostProcessTools"] = data[14]
+		BABYLON.Effect.IncludesShadersStore["LensFlares"] = data[15]
 		BABYLON.Effect.IncludesShadersStore["PrecomputedAtmosphericScattering"] = data[11]
 		BABYLON.Effect.IncludesShadersStore["SeanONeilAtmosphericScattering"] = data[12]
 

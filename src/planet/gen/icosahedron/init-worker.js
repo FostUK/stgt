@@ -1,6 +1,6 @@
 import { Utils } from "../../../utils.js"
 import { COMP_GL, COMP_GL_PROGRAM } from "../../../loader.js"
-const IcoWorker = new Worker("/src/planet/gen/icosahedron/Worker.js", { type: "module" })
+const IcoWorker = new Worker("/src/planet/gen/icosahedron/worker.js", { type: "module" })
 
 let IN_TRANSFORM_BUFFER = null
 let OUT_TRANSFORM_BUFFER = null

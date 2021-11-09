@@ -12,7 +12,7 @@ export const initScene = (main, scene) => {
 	main.time = 0.0
 	main.universeNode = new BABYLON.TransformNode()
 	main.camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 0, 0), scene)
-	main.camera.attachControl(canvas, true)
+	main.camera.attachControl(main.canvas, true)
 
 	main.camera.minZ = 0.01
 	main.camera.maxZ = 7000000

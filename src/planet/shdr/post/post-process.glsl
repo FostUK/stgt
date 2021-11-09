@@ -8,6 +8,7 @@ precision highp sampler3D;
 
 #include<Tools>
 #include<Noise3D>
+#include<LensFlares>
 
 varying vec2 vUV;
 uniform float TIME;
@@ -56,6 +57,7 @@ const float EPSILON = 0.01;
 #include<PrecomputedAtmosphericScattering>
 #include<Ocean>
 
+
 vec3 combineScenes()
 {
 	vec3 screen = tex(vUV);
@@ -99,8 +101,12 @@ vec3 combineScenes()
 
 	vec3 sunvis = vec3(floor((1.0-0.1)+pow(tex(sunuv).r, 1.0)));
 
+
+
 	sunuv = sunuv - 0.5;
 	sunuv.x *= screenSize.x/screenSize.y;
+
+	// TODO Use dot(dir, lightDir) > -0.9 below somehow?
 
 	if (sunvis.r > 0.0){
 		 color.xyz += lensflare(uv*2.0, sunuv*2.0) * vec3(.8, .7, .3) * 3.0;//vec3(0.369,0.200,0.620) */
