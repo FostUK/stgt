@@ -4,22 +4,15 @@ import { Utils } from "../../../utils.js"
 import { precompute, icoIndices, icoRecurseIndices } from "./ico-sphere.js"
 import { MaxLevel } from "./config.js"
 
-const WINDOW_WIDTH = 1
-const WINDOW_HEIGHT = 1
-
-const PERMUTATION_TABLE_SIZE = 512
-
-var MeshData = null
-
-var CurrentLevel = 0
+let level = 0
 var Radius = 10
 var MaxHeight = 1
 var Position = null
 var Frustumplanes = []
 
-const recurse = (p1, p2, p3, center, level) => {
-	if (level > CurrentLevel) {
-		CurrentLevel = level
+const recurse = (meshData, p1, p2, p3, center, newLevel) => {
+	if (newLevel > level) {
+		level = newLevel
 	}
 
 	//The Great Cull
@@ -55,12 +48,12 @@ const recurse = (p1, p2, p3, center, level) => {
 	// Their distance is evaluated
 	for (let i = 0; i < 3; i++) {
 		let distance = Utils.distanceToPoint3DV(edges[i], center)
-		edgeDist[i] = level > 3 ? distance > DistanceLevels[level] : false
+		edgeDist[i] = newLevel > 3 ? distance > DistanceLevels[newLevel] : false
 	}
 
 	// Add Triangle
-	if ((edgeDist[0] && edgeDist[1] && edgeDist[2]) || level >= MaxLevel) {
-		addTriangle(p1, p2, p3)
+	if ((edgeDist[0] && edgeDist[1] && edgeDist[2]) || newLevel >= MaxLevel) {
+		addTriangle(meshData, p1, p2, p3)
 		return
 	}
 
@@ -84,17 +77,18 @@ const recurse = (p1, p2, p3, center, level) => {
 	for (let i = 0; i < 4; i++) {
 		if (valid[i] == true) {
 			recurse(
+				meshData,
 				Utils.Normalize(p[icoRecurseIndices[3 * i + 0]]),
 				Utils.Normalize(p[icoRecurseIndices[3 * i + 1]]),
 				Utils.Normalize(p[icoRecurseIndices[3 * i + 2]]),
 				center,
-				level + 1,
+				newLevel + 1,
 			)
 		}
 	}
 }
 
-const addTriangle = (p1, p2, p3) => {
+const addTriangle = (meshData, p1, p2, p3) => {
 	// let np1 = UTILS.Multiply31(p1, Radius + (SampleNoise(p1, NoiseOpt) * Radius * MaxHeight) );
 	// let np2 = UTILS.Multiply31(p2, Radius + (SampleNoise(p2, NoiseOpt) * Radius * MaxHeight) );
 	// let np3 = UTILS.Multiply31(p3, Radius + (SampleNoise(p3, NoiseOpt) * Radius * MaxHeight) );
@@ -102,26 +96,28 @@ const addTriangle = (p1, p2, p3) => {
 	let np2 = Utils.Multiply31(p2, Radius)
 	let np3 = Utils.Multiply31(p3, Radius)
 
-	MeshData.vertices.push(np3._x, np3._y, np3._z)
-	MeshData.vertices.push(np2._x, np2._y, np2._z)
-	MeshData.vertices.push(np1._x, np1._y, np1._z)
+	meshData.vertices.push(np3._x, np3._y, np3._z)
+	meshData.vertices.push(np2._x, np2._y, np2._z)
+	meshData.vertices.push(np1._x, np1._y, np1._z)
 
-	let len = MeshData.vertices.length / 3
-	MeshData.indices.push(len - 3, len - 2, len - 1)
+	const len = meshData.vertices.length / 3
+	meshData.indices.push(len - 3, len - 2, len - 1)
 }
 
 const rebuild = center => {
 	//delete MeshData
-	MeshData = new MeshDataClass()
+	const meshData = new MeshData()
 
-	CurrentLevel = 0
+	level = 0
 
 	for (let i = 0; i < icoIndices.length / 3; i++) {
 		let p1 = Utils.Normalize(IcoPoints[icoIndices[i * 3 + 0]]) // triangle point 1
 		let p2 = Utils.Normalize(IcoPoints[icoIndices[i * 3 + 1]]) // triangle point 2
 		let p3 = Utils.Normalize(IcoPoints[icoIndices[i * 3 + 2]]) // triangle point 3
-		recurse(p1, p2, p3, center, 0, p1, p2, p3)
+		recurse(meshData, p1, p2, p3, center, 0, p1, p2, p3)
 	}
+
+	return meshData
 }
 
 function isPointInFrustum(planes, point) {
@@ -158,38 +154,38 @@ const makeSharedData = meshData => {
 let IcoPoints
 let DistanceLevels
 
-self.onmessage = e => {
-	const state = e.data.state
+const initialise = e => {
+		const state = e.data.state
+		const { icoPoints, distanceLevels, noiseOptions } = precompute(e.data)
 
-	switch (state) {
-		case 0: // Setup worker
-			const { icoPoints, distanceLevels, noiseOptions } = precompute(e.data)
+		IcoPoints = icoPoints //TODO stop sharing with module "globals"
+		DistanceLevels = distanceLevels //TODO stop sharing with module "globals"
 
-			IcoPoints = icoPoints //TODO stop sharing with module "globals"
-			DistanceLevels = distanceLevels //TODO stop sharing with module "globals"
-
-			postMessage({ state })
-			break
-
-		case 1: // Build Data
-			let center = e.data.center || Utils.Vector3([0])
-			Radius = e.data.radius || 10
-			Frustumplanes = e.data.frustumplanes
-			MaxHeight = e.data.maxHeight
-			Position = e.data.position
-			rebuild(center)
-			const data = makeSharedData(MeshData)
-
-			postMessage({
-				state,
-				data,
-				level: CurrentLevel,
-			})
-			break
+		postMessage({ state })
 	}
-}
 
-class MeshDataClass {
+const build = e => {
+		const state = e.data.state
+		const center = e.data.center || Utils.Vector3([0])
+		Radius = e.data.radius || 10
+		Frustumplanes = e.data.frustumplanes
+		MaxHeight = e.data.maxHeight
+		Position = e.data.position
+		const meshData = rebuild(center)
+		const data = makeSharedData(meshData)
+
+		postMessage({
+			state,
+			data,
+			level,
+		})
+	}
+
+const dispatcher = [initialise, build]
+
+self.onmessage = e => dispatcher[e.data.state](e)
+
+class MeshData {
 	constructor(v, i, u, n) {
 		this.vertices = v || []
 		this.indices = i || []
