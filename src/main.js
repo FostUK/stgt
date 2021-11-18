@@ -10,46 +10,36 @@ Utils.clearAllTimeoutsAndIntervals()
 
 const { scene, engine, canvas } = boot()
 
-const main = {
-	engine,
-	canvas,
-	scene,
-	delta: 0,
-	objects: {},
-	mouseDX: 0,
-	mouseDY: 0,
-}
-
 const preload = () => {
 	//console.log(window.navigator.hardwareConcurrency);
-	main.dsm = new BABYLON.DeviceSourceManager(main.engine)
+	const dsm = new BABYLON.DeviceSourceManager(engine)
 }
 
-function updateUniverseNode() {
-	main.universeNode.position = main.universeNode.position.subtract(main.camera.position)
-	main.camera.position = new BABYLON.Vector3(0, 0, 0)
-}
+//function updateUniverseNode() {
+//	universeNode.position = main.universeNode.position.subtract(camera.position)
+//	camera.position = new BABYLON.Vector3(0, 0, 0)
+//}
 
 const loadComplete = () => {
 	preload()
-	initScene(main, scene)
-	postProcess(main)
+	const {camera, planet, sun, transform2 } = initScene(scene, canvas)
+	postProcess(scene, camera, planet, engine, sun)
 
 	setupPointerLock(canvas)
 
-	const step = getStep(main)
+	const step = getStep(engine, sun, planet, scene, transform2)
 
 	scene.registerBeforeRender(() => {
 		step()
-		main.mouseDX = 0
-		main.mouseDY = 0
+		//main.mouseDX = 0
+		//main.mouseDY = 0
 	})
 
 	//scene.registerAfterRender(() => {
 	//	// postStep();
 	//})
 
-	engine.runRenderLoop(() => main.scene.render())
+	engine.runRenderLoop(() => scene.render())
 }
 
 loadResources(loadComplete, scene, canvas)

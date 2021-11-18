@@ -8,16 +8,15 @@ const toggleWireFrame = mat => () => (mat.wireframe = !mat.wireframe)   //TODO m
 const phi = 90
 const theta = 90
 
-export const initScene = (main, scene) => {
-	main.time = 0.0
-	main.universeNode = new BABYLON.TransformNode()
-	main.camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 0, 0), scene)
-	main.camera.attachControl(main.canvas, true)
+export const initScene = (scene, canvas) => {
+	const universeNode = new BABYLON.TransformNode()
+	const camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 0, 0), scene)
+	camera.attachControl(canvas, true)
 
-	main.camera.minZ = 0.01
-	main.camera.maxZ = 7000000
+	camera.minZ = 0.01
+	camera.maxZ = 7000000
 
-	main.planet = new Planet(
+	const planet = new Planet(
 		{
 			name: "Earth",
 			position: new BABYLON.Vector3(0, 0, 0),
@@ -27,27 +26,21 @@ export const initScene = (main, scene) => {
 		scene,
 	)
 
-	main.light = new BABYLON.DirectionalLight(
-		"dirLight",
-		BABYLON.Vector3.Normalize(new BABYLON.Vector3(0, -0.1, -1.0)),
-		scene,
-	)
-	main.light.intensity = 0.7
+	const sun = createStar("sun", scene)
 
-	main.sun = createStar("sun", scene)
+	document.getElementById("wireframe").onclick = toggleWireFrame(planet.material)
 
+	camera.position = Utils.sphericalToVector(planet.radius * 1.001, theta, phi, true) //1.051
+	planet.setObserver(new BABYLON.Vector3(0, 0, 0))
 
-	document.getElementById("wireframe").onclick = toggleWireFrame(main.planet.material)
+	const transform = new BABYLON.TransformNode("p")
+	const transform2 = new BABYLON.TransformNode("hh")
 
-	main.camera.position = Utils.sphericalToVector(main.planet.radius * 1.001, theta, phi, true) //1.051
-	main.planet.setObserver(new BABYLON.Vector3(0, 0, 0))
+	transform2.parent = transform
+	transform2.position.z = -planet.radius * 10.0
+	transform2.position.y = -planet.radius
 
-	main.transform = new BABYLON.TransformNode("p")
-	main.transform2 = new BABYLON.TransformNode("hh")
+	transform.rotation.y += 0.16
 
-	main.transform2.parent = main.transform
-	main.transform2.position.z = -main.planet.radius * 10.0
-	main.transform2.position.y = -main.planet.radius
-
-	main.transform.rotation.y += 0.16
+	return {universeNode, camera, planet, sun, transform2}
 }

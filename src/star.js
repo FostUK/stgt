@@ -18,9 +18,16 @@ export const createStar = (title, scene) => {
 	starMat.disableLighting = true
 
 
+	const light = new BABYLON.DirectionalLight(
+		"dirLight",
+		BABYLON.Vector3.Normalize(new BABYLON.Vector3(0, -0.1, -1.0)),
+		scene,
+	)
+	light.intensity = 0.7
 
-	const ll = new BABYLON.PointLight("sunLight", mesh.position, scene)
-	ll.parent = mesh
 
-	return mesh
+	return {
+		mesh,
+		light,
+	}
 }
