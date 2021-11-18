@@ -1,23 +1,23 @@
-import {config} from '../config.js'
-import {Utils} from '../utils.js'
+import { config } from "../config.js"
+import { Utils } from "../utils.js"
 
-export const setupPointerLock = (main) => {
-	document.addEventListener("pointerlockchange", changeCallback(main), false)
+export const setupPointerLock = canvas => {
+	//document.addEventListener("pointerlockchange", changeCallback(main), false)
 
-	main.canvas.onclick = main.canvas.requestPointerLock
+	canvas.onclick = canvas.requestPointerLock
 }
 
-const changeCallback = (canvas, main) => () => {
-	const handleListener = document.pointerLockElement === canvas ? "addEventListener" : "removeEventListener"
-	document[handleListener]("mousemove", mouseMove(main), false)
-}
+//const changeCallback = main => () => {
+//	const handleListener = document.pointerLockElement === main.canvas ? "addEventListener" : "removeEventListener"
+//	document[handleListener]("mousemove", mouseMove(main), false)
+//}
 
-const mouseMove = main => e => {
-	main.mouseDX = e.movementX || 0
-	main.mouseDY = e.movementY || 0
-
-	//updateCamera();
-}
+//const mouseMove = main => e => {
+//	main.mouseDX = e.movementX || 0
+//	main.mouseDY = e.movementY || 0
+//
+//	//updateCamera();
+//}
 
 function updateCamera() {
 	config.mouseX += main.mouseDX * config.mouseSensitivity * main.delta

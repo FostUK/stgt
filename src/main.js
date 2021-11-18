@@ -35,7 +35,7 @@ const loadComplete = () => {
 	initScene(main, scene)
 	postProcess(main)
 
-	setupPointerLock(main)
+	setupPointerLock(canvas)
 
 	const step = getStep(main)
 
@@ -45,9 +45,9 @@ const loadComplete = () => {
 		main.mouseDY = 0
 	})
 
-	scene.registerAfterRender(() => {
-		// postStep();
-	})
+	//scene.registerAfterRender(() => {
+	//	// postStep();
+	//})
 
 	engine.runRenderLoop(() => main.scene.render())
 }
