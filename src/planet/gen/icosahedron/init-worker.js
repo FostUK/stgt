@@ -1,6 +1,7 @@
 import { Utils } from "../../../utils.js"
 import { COMP_GL, COMP_GL_PROGRAM } from "../../../loader.js"
 const IcoWorker = new Worker("/src/planet/gen/icosahedron/worker.js", { type: "module" })
+import { ui } from '../../../ui.js'
 
 let IN_TRANSFORM_BUFFER = null
 let OUT_TRANSFORM_BUFFER = null
@@ -110,12 +111,6 @@ const makeMesh = (planet, meshData) => {
 	}
 }
 
-const vertCount = document.getElementById("vertCount")
-const level = document.getElementById("level")
-const debug = p => {
-	vertCount.innerHTML = "Vertex Count: " + p.vertexCount
-	level.innerHTML = "Current Level: " + p.currentLevel
-}
 
 export const initWorker = planet => {
 	const sendToWorker = sendToWorkerFn(planet)
@@ -131,9 +126,9 @@ export const initWorker = planet => {
 				if (planet.isRunning) {
 					makeMesh(planet, e.data.data)
 
-					debug({
+					ui.workUpdate({
 						vertexCount: e.data.data.vertices.length / 3,
-						currentLevel: e.data.level,
+						level: e.data.level,
 					})
 					sendToWorker(1)
 				}

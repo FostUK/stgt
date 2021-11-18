@@ -1,7 +1,7 @@
 {
-	"name": "babylonjs-planets",
+	"name": "STGT",
 	"version": "1.0.0",
-	"description": "Realtime Planet Rendering powered by BabylonJS",
+	"description": "Tools for making Space Trading Games",
 	"main": "index.js",
 	"directories": {
 		"lib": "lib"
@@ -16,10 +16,6 @@
 	},
 	"author": "",
 	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/TheNosiriN/BabylonJS-Planets/issues"
-	},
-	"homepage": "https://github.com/TheNosiriN/BabylonJS-Planets#readme",
 	"dependencies": {
 		"express": "^4.17.1",
 		"babylonjs": "^5.0.0-alpha.60"

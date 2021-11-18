@@ -22,12 +22,12 @@ const preload = () => {
 
 const loadComplete = () => {
 	preload()
-	const {camera, planet, sun, transform2 } = initScene(scene, canvas)
+	const {camera, planet, sun, transform2, ui } = initScene(scene, engine, canvas)
 	postProcess(scene, camera, planet, engine, sun)
 
 	setupPointerLock(canvas)
 
-	const step = getStep(engine, sun, planet, scene, transform2)
+	const step = getStep(planet, scene, ui)
 
 	scene.registerBeforeRender(() => {
 		step()

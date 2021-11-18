@@ -1,8 +1,8 @@
 //TODO this colour is always white - post shader is overwriting it
 
-export const createStar = (title, scene) => {
+export const createStar = (scene, config) => {
 	const mesh = BABYLON.MeshBuilder.CreateDisc(
-		title,
+		config.name,
 		{ radius: 1000, arc: 1, tessellation: 64, sideOrientation: BABYLON.Mesh.DEFAULTSIDE },
 		scene,
 	)
@@ -24,6 +24,9 @@ export const createStar = (title, scene) => {
 		scene,
 	)
 	light.intensity = 0.7
+	light.setDirectionToTarget(config.directionToTarget)
+
+	mesh.position = light.direction.multiply(config.meshPosition)
 
 
 	return {

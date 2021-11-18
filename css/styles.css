@@ -7,19 +7,22 @@ body {
 	padding: 0;
 	overflow-y: hidden;
 	overflow-x: hidden;
-}
-
-#fps {
-	position: absolute;
-	background-color: purple;
 	text-align: center;
 	font-family: monospace;
 	font-size: 16px;
 	color: white;
-	top: 10px;
-	right: 5px;
-	width: auto;
-	height: auto;
+}
+
+#ui {
+    width: 140px;
+    height: 140px;
+    background-color: rgba(0,0,0,0.5);
+    position: absolute;
+    top: 20px;
+    left: 20px;
+	border: 2px solid gray;
+	border-radius: 6px;
+	padding: 10px 0;
 }
 
 #vertCount {
@@ -40,19 +43,6 @@ body {
 	color: white;
 	top: 30px;
 	left: 5px;
-}
-
-#wireframe {
-	position: absolute;
-	background-color: purple;
-	text-align: center;
-	font-family: monospace;
-	font-size: 16px;
-	color: white;
-	top: 80px;
-	right: 5px;
-	width: auto;
-	height: auto;
 }
 
 #cameraInfo {

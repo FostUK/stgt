@@ -1,12 +1,12 @@
 const divFps = document.getElementById("fps")
 
-export const getStep = (engine, sun, planet, scene, transform2) => () => {
-	divFps.innerHTML = "|  " + engine.getFps().toFixed() + " fps  |"
+export const getStep = (planet, scene, ui) => () => {
+	ui.update()
 	// transform.rotation.y = (transform.rotation.y + 0.0015) % (Math.PI*2);
 	// transform.rotation.x = (transform.rotation.x + 0.0015) % (Math.PI*2);
 
-	sun.light.setDirectionToTarget(transform2.getAbsolutePosition())
-	sun.mesh.position = sun.light.direction.multiply(new BABYLON.Vector3().setAll(-planet.radius * 50))
+	//sun.light.setDirectionToTarget(transform2.getAbsolutePosition())
+	//sun.mesh.position = sun.light.direction.multiply(new BABYLON.Vector3().setAll(-planet.radius * 50))
 
 	//updateCamera();
 	//updateUniverseNode();
@@ -30,6 +30,5 @@ export const getStep = (engine, sun, planet, scene, transform2) => () => {
 
 	//planet.setPosition(game.universeNode.position);
 	planet.setObserver(scene.activeCamera.globalPosition)
-	planet.setLightDirection(sun.light.direction.multiply(new BABYLON.Vector3(-1, -1, -1)))
 	planet.updatePlanet()
 }

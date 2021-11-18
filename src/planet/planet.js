@@ -10,7 +10,6 @@ let IcoWorkerUser = null
 export class Planet extends BABYLON.TransformNode {
 	constructor(p, scene) {
 		super(p.name || "Earth", scene)
-
 		this.position = p.position || new BABYLON.Vector3.Zero()
 
 		this.observer = new BABYLON.Vector3.Zero()
@@ -45,6 +44,8 @@ export class Planet extends BABYLON.TransformNode {
 		}.bind(this)
 
 		planetMaterial(this, onComplete)
+
+		this.setObserver(new BABYLON.Vector3(0, 0, 0))
 	}
 
 	createBlankSphere() {
