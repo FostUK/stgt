@@ -2,7 +2,7 @@ import { Planet } from "./planet/planet.js"
 import { createStar } from "./star.js"
 import { Utils } from "./utils.js"
 import { createCamera } from "./camera.js"
-import { createUI } from "./ui.js"
+import { createDebugOverlay } from "./debug-overlay.js"
 
 const phi = 90
 const theta = 90
@@ -21,7 +21,7 @@ export const initScene = (scene, engine, canvas) => {
 		scene,
 	)
 
-	const ui = createUI(planet, engine)
+	const debugOverlay = createDebugOverlay(planet, engine)
 
 	camera.position = Utils.sphericalToVector(planet.radius * 1.001, theta, phi, true) //1.051
 
@@ -42,5 +42,5 @@ export const initScene = (scene, engine, canvas) => {
 
 	planet.setLightDirection(sun.light.direction.multiply(new BABYLON.Vector3(-1, -1, -1)))
 
-	return { camera, planet, sun, transform2, ui }
+	return { camera, planet, sun, debugOverlay }
 }

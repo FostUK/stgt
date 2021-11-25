@@ -3,7 +3,7 @@ import {
 	SCATTERING_TEXTURE,
 	SINGLE_MIE_SCATTERING_TEXTURE,
 	TRANSMITTANCE_TEXTURE,
-} from "./loader.js"
+} from "./loader/loader.js"
 
 export const postProcess = (scene, camera, planet, engine, sun) => {
 	const depthRenderer = scene.enableDepthRenderer(camera, false, true)
@@ -12,20 +12,13 @@ export const postProcess = (scene, camera, planet, engine, sun) => {
 		"SOCA",
 		"PostProcess",
 		[
-			"warpFrequency",
 			"lightDir",
-			"octaves",
-			"frequency",
 			"screenSize",
-			"RADIUS",
-			"amplitude",
 			"roughness",
 			"camera.far",
 			"camera.near",
 			"camera.world",
 			"camera.view",
-			"persistence",
-			"warpAmplitude",
 			"camera.projection",
 			"camera.transform",
 			"planet.rCoeff",
@@ -65,23 +58,13 @@ export const postProcess = (scene, camera, planet, engine, sun) => {
 		effect.setFloat("planet.radius", planet.radius)
 		effect.setFloat("planet.maxHeight", planet.maxHeight)
 		effect.setVector3("planet.position", planet.getAbsolutePosition())
-
-		effect.setInt("octaves", planet.properties.octaves)
-		effect.setFloat("frequency", planet.properties.frequency)
-		effect.setFloat("amplitude", planet.properties.amplitude)
 		effect.setFloat("roughness", planet.properties.roughness)
-		effect.setFloat("persistence", planet.properties.persistence)
-		effect.setFloat("warpAmplitude", planet.properties.warpAmplitude)
-		effect.setFloat("warpFrequency", planet.properties.warpFrequency)
-
 		effect.setVector3("planet.rCoeff", planet.properties.rCoeff)
 		effect.setVector3("planet.mCoeff", planet.properties.mCoeff)
 		effect.setFloat("planet.mieG", planet.properties.mieG)
 
 		effect.setVector3("lightDir", sun.light.direction.multiply(new BABYLON.Vector3(-1, -1, -1)))
-
 		effect.setTexture("depthMap", depthRenderer.getDepthMap())
-
 		effect.setVector2("screenSize", new BABYLON.Vector2(postProcessEffect.width, postProcessEffect.height))
 
 		//effect.setVector3("camera.position", game.universeNode.getAbsolutePosition().multiply(new BABYLON.Vector3(-1,-1,-1)));

@@ -1,7 +1,7 @@
 import { Utils } from "../../../utils.js"
-import { COMP_GL, COMP_GL_PROGRAM } from "../../../loader.js"
+import { COMP_GL, COMP_GL_PROGRAM } from "../../../loader/loader.js"
 const IcoWorker = new Worker("/src/planet/gen/icosahedron/worker.js", { type: "module" })
-import { ui } from '../../../ui.js'
+import { debugOverlay } from '../../../debug-overlay.js'
 
 let IN_TRANSFORM_BUFFER = null
 let OUT_TRANSFORM_BUFFER = null
@@ -126,7 +126,7 @@ export const initWorker = planet => {
 				if (planet.isRunning) {
 					makeMesh(planet, e.data.data)
 
-					ui.workUpdate({
+					debugOverlay.workUpdate({
 						vertexCount: e.data.data.vertices.length / 3,
 						level: e.data.level,
 					})

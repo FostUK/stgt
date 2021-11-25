@@ -1,4 +1,4 @@
-import { COMP_GL, COMP_GL_PROGRAM, GRASS_ONE_TEXTURE, ROCK_ONE_TEXTURE } from "../loader.js"
+import { COMP_GL, COMP_GL_PROGRAM, GRASS_ONE_TEXTURE, ROCK_ONE_TEXTURE } from "../loader/loader.js"
 
 function setFeedbackUniformInt(name, value) {
 	COMP_GL.uniform1i(COMP_GL.getUniformLocation(COMP_GL_PROGRAM, name), value)

@@ -20,9 +20,6 @@ vec2 raySphere(vec3 sphereCentre, float sphereRadius, vec3 rayOrigin, vec3 rayDi
 	return vec2(camera.far, 0.0);
 }
 
-
-
-
 vec3 toViewSpace(vec3 pos, vec3 dir, float dist)
 {
     vec3 posIntersectInWorldSpace = vec3(pos + dist * dir);
@@ -37,8 +34,6 @@ float toWorldSpace(float depth)
 		float viewLength = length(viewVector);
 		return depth * viewLength;
 }
-
-
 
 vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
     vec2 xy = (fragCoord*2.0) - size;
@@ -59,17 +54,12 @@ mat4 viewMatrix(vec3 eye, vec3 direction, vec3 up) {
     );
 }
 
-
 vec3 getFragmentRay(in vec2 fragCoord)
 {
     vec3 viewDir = rayDirection(camera.fov, screenSize, fragCoord);
     mat4 viewToWorld = viewMatrix(camera.position, camera.direction, vec3(0.0, 1.0, 0.0));
     return (viewToWorld * vec4(viewDir, 0.0)).xyz;
 }
-
-
-
-
 
 vec3 getUVRayScreenSpace()
 {
@@ -140,8 +130,6 @@ vec3 tex(vec2 p){
 	return texture2D(textureSampler, p).rgb;
 }
 
-
-
 //from: https://www.shadertoy.com/view/4l2GWm
 vec3 quincunxAA(vec2 fragCoord, float blur)
 {
@@ -153,9 +141,6 @@ vec3 quincunxAA(vec2 fragCoord, float blur)
 	pixelColor += texture2D(textureSampler, (fragCoord + vec2(-blur, blur)) / screenSize).rgb / 8.0;
 	return pixelColor;
 }
-
-
-
 
 vec3 hdr(vec3 L)
 {
