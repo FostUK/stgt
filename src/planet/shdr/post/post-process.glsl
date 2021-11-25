@@ -19,6 +19,7 @@ uniform sampler2D textureSampler;
 struct Camera {
 	vec3 position;
 	vec3 direction;
+	vec3 up;
 
 	float fov;
 	float far;
@@ -68,6 +69,11 @@ vec3 combineScenes()
 
 	vec3 eye = camera.position - planet.position;
 	vec3 dir = getFragmentRay(gl_FragCoord.xy);
+
+//	vec4 eyex = inverse(camera.projection) * vec4(vUV * 2. - 1., 0., -1.);
+//	vec3 eye = vec3(eyex.x, eyex.y, eyex.z);
+//    vec4 viewVector = camera.world * vec4(eye.x, eye.y, eye.z, 0.);
+//    vec3 dir = normalize(vec3(viewVector.x, viewVector.y, -viewVector.z));
 
 
 	vec2 calcPlanetSphere = raySphere(planet.position, planet.radius, eye, dir);
@@ -121,12 +127,5 @@ vec3 combineScenes()
 
 void main(void)
 {
-	float marginSize = 0.1;
-	if (vUV.y < marginSize || vUV.y > 1.0-marginSize){
-		gl_FragColor = vec4(vec3(0.0), 1.0);
-		return;
-	}
-
 	gl_FragColor = vec4(combineScenes(), 1.0);
-	/* gl_FragColor = vec4(texture(textureSampler, vUV)); */
 }

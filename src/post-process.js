@@ -27,6 +27,7 @@ export const postProcess = (scene, camera, planet, engine, sun) => {
 			"camera.position",
 			"camera.direction",
 			"camera.fov",
+			"camera.up",
 			"planet.radius",
 			"planet.position",
 			"planet.maxHeight",
@@ -70,6 +71,7 @@ export const postProcess = (scene, camera, planet, engine, sun) => {
 		//effect.setVector3("camera.position", game.universeNode.getAbsolutePosition().multiply(new BABYLON.Vector3(-1,-1,-1)));
 		effect.setVector3("camera.position", scene.activeCamera.globalPosition)
 		effect.setVector3("camera.direction", scene.activeCamera.getForwardRay(1).direction)
+		effect.setVector3("camera.up", scene.activeCamera.upVector)
 
 		effect.setFloat("camera.fov", camera.fov)
 		effect.setFloat("camera.far", camera.maxZ)

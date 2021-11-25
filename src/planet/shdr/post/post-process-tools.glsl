@@ -57,7 +57,7 @@ mat4 viewMatrix(vec3 eye, vec3 direction, vec3 up) {
 vec3 getFragmentRay(in vec2 fragCoord)
 {
     vec3 viewDir = rayDirection(camera.fov, screenSize, fragCoord);
-    mat4 viewToWorld = viewMatrix(camera.position, camera.direction, vec3(0.0, 1.0, 0.0));
+    mat4 viewToWorld = viewMatrix(camera.position, camera.direction, camera.up);
     return (viewToWorld * vec4(viewDir, 0.0)).xyz;
 }
 

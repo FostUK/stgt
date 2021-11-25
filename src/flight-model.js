@@ -17,11 +17,11 @@ const updateRotation = () => {
 	currentCyclic.y = currentCyclic.y + clamp(controls.cyclic.y - currentCyclic.y, -cyclicDamping, cyclicDamping)
 
 	telemetry.pitch = 0.001 * -currentCyclic.y
-	telemetry.roll = 0.001 * currentCyclic.x
+	telemetry.roll = 0.001 * -currentCyclic.x
 
-	//const rotorYaw = controls.rotor * 0.001 //TODO consider velocity
-	//const cyclicYaw = -currentCyclic.x * currentCyclic.y * 0.00001
-	//telemetry.yaw = rotorYaw + cyclicYaw
+	const rotorYaw = controls.rotor * 0.001 //TODO consider velocity
+	const cyclicYaw = -currentCyclic.x * currentCyclic.y * 0.00001
+	telemetry.yaw = rotorYaw + cyclicYaw
 }
 
 const updateVelocity = () => {
