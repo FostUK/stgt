@@ -69,18 +69,18 @@ export const postProcess = (scene, camera, planet, engine, sun) => {
 		effect.setVector2("screenSize", new BABYLON.Vector2(postProcessEffect.width, postProcessEffect.height))
 
 		//effect.setVector3("camera.position", game.universeNode.getAbsolutePosition().multiply(new BABYLON.Vector3(-1,-1,-1)));
-		effect.setVector3("camera.position", scene.activeCamera.globalPosition)
-		effect.setVector3("camera.direction", scene.activeCamera.getForwardRay(1).direction)
-		effect.setVector3("camera.up", scene.activeCamera.upVector)
+		effect.setVector3("camera.position", camera.globalPosition)
+		effect.setVector3("camera.direction", camera.getForwardRay(1).direction)
+		effect.setVector3("camera.up", camera.upVector)
 
 		effect.setFloat("camera.fov", camera.fov)
 		effect.setFloat("camera.far", camera.maxZ)
 		effect.setFloat("camera.near", camera.minZ)
 
-		effect.setMatrix("camera.view", scene.activeCamera.getViewMatrix())
-		effect.setMatrix("camera.projection", scene.activeCamera.getProjectionMatrix())
-		effect.setMatrix("camera.world", scene.activeCamera.getWorldMatrix())
-		effect.setMatrix("camera.transform", scene.activeCamera.getTransformationMatrix())
+		effect.setMatrix("camera.view", camera.getViewMatrix())
+		effect.setMatrix("camera.projection", camera.getProjectionMatrix())
+		effect.setMatrix("camera.world", camera.getWorldMatrix())
+		effect.setMatrix("camera.transform", camera.getTransformationMatrix())
 
 		effect.setTexture("irradiance_texture", IRRADIANCE_TEXTURE)
 		effect.setTexture("scattering_texture", SCATTERING_TEXTURE)

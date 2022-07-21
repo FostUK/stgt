@@ -29,6 +29,6 @@ export const getStep = (planet, scene, ui) => () => {
 	// game.camera.upVector = box.up;
 
 	//planet.setPosition(game.universeNode.position);
-	planet.setObserver(scene.activeCamera.globalPosition)
+	planet.setObserver(scene.activeCameras[0].globalPosition)
 	planet.updatePlanet()
 }
