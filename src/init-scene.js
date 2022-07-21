@@ -1,7 +1,8 @@
 import { Planet } from "./planet/planet.js"
 import { createStar } from "./star.js"
 import { Utils } from "./utils.js"
-import { createCamera } from "./camera.js"
+import { createCamera } from "./cameras/camera.js"
+import { createUICamera } from "./cameras/ui-camera.js"
 import { createDebugOverlay } from "./debug-overlay.js"
 
 const phi = 90
@@ -10,6 +11,10 @@ const theta = 90
 export const initScene = (scene, engine, canvas) => {
 	//const universeNode = new BABYLON.TransformNode()
 	const camera = createCamera(scene, canvas)
+
+	const uiCamera = createUICamera()
+
+	scene.activeCameras = [camera, uiCamera];
 
 	const planet = new Planet(
 		{

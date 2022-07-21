@@ -1,5 +1,5 @@
 {
-	"name": "STGT",
+	"name": "stgt",
 	"version": "1.0.0",
 	"description": "Tools for making Space Trading Games",
 	"main": "index.js",
@@ -18,10 +18,10 @@
 	"license": "ISC",
 	"dependencies": {
 		"express": "^4.17.1",
-		"babylonjs": "^5.0.0-alpha.61",
-		"babylonjs-gui": "^5.0.0-alpha.61",
-		"babylonjs-loaders": "^5.0.0-alpha.61",
-		"babylonjs-materials": "^5.0.0-alpha.61"
+		"babylonjs": "5.16.0",
+		"babylonjs-gui": "5.16.0",
+		"babylonjs-loaders": "5.16.0",
+		"babylonjs-materials": "5.16.0"
 	},
 	"devDependencies": {
 		"prettier": "^2.4.1"

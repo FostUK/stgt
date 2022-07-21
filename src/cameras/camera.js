@@ -1,4 +1,4 @@
-import { flightCameraInput } from './flight-camera-input.js'
+import { flightCameraInput } from '../flight-camera-input.js'
 
 export const createCamera = (scene, canvas) => {
 	const camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 0, 0), scene)
