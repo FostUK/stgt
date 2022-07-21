@@ -109,36 +109,36 @@ const loadAssets = (callback, scene) => {
 	}
 
 	/// Rock 1
-	ASSET_MANAGER.addTextureTask("rock1", "res/textures/material/rock/rock1/diff_1k.png").onSuccess = function (task) {
+	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/diff_1k.png").onSuccess = function (task) {
 		ROCK_ONE_TEXTURE[0] = task.texture
 	}
-	ASSET_MANAGER.addTextureTask("rock1", "res/textures/material/rock/rock1/nor_1k.png").onSuccess = function (task) {
+	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/nor_1k.png").onSuccess = function (task) {
 		ROCK_ONE_TEXTURE[1] = task.texture
 	}
-	ASSET_MANAGER.addTextureTask("rock1", "res/textures/material/rock/rock1/rough_1k.png").onSuccess = function (task) {
+	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/rough_1k.png").onSuccess = function (task) {
 		ROCK_ONE_TEXTURE[2] = task.texture
 	}
-	ASSET_MANAGER.addTextureTask("rock1", "res/textures/material/rock/rock1/ao_1k.png").onSuccess = function (task) {
+	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/ao_1k.png").onSuccess = function (task) {
 		ROCK_ONE_TEXTURE[3] = task.texture
 	}
 
 	/// Grass 1
-	ASSET_MANAGER.addTextureTask("grass1", "res/textures/material/grass/grass1/diff_1k.png").onSuccess = function (
+	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/diff_1k.png").onSuccess = function (
 		task,
 	) {
 		GRASS_ONE_TEXTURE[0] = task.texture
 	}
-	ASSET_MANAGER.addTextureTask("grass1", "res/textures/material/grass/grass1/nor_1k.png").onSuccess = function (
+	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/nor_1k.png").onSuccess = function (
 		task,
 	) {
 		GRASS_ONE_TEXTURE[1] = task.texture
 	}
-	ASSET_MANAGER.addTextureTask("grass1", "res/textures/material/grass/grass1/rough_1k.png").onSuccess = function (
+	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/rough_1k.png").onSuccess = function (
 		task,
 	) {
 		GRASS_ONE_TEXTURE[2] = task.texture
 	}
-	ASSET_MANAGER.addTextureTask("grass1", "res/textures/material/grass/grass1/ao_1k.png").onSuccess = function (task) {
+	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/ao_1k.png").onSuccess = function (task) {
 		GRASS_ONE_TEXTURE[3] = task.texture
 	}
 
@@ -160,7 +160,7 @@ const IRRADIANCE_TEXTURE_HEIGHT = 16
 
 function loadAtmosphereDataTextures(callback, scene) {
 	// Atmosphere Shader Textures
-	Utils.loadTextureData("res/atmosphere/irradiance.raw", function (data) {
+	Utils.loadTextureData("assets/atmosphere/irradiance.raw", function (data) {
 		IRRADIANCE_TEXTURE = new BABYLON.RawTexture(
 			data,
 			IRRADIANCE_TEXTURE_WIDTH,
@@ -174,7 +174,7 @@ function loadAtmosphereDataTextures(callback, scene) {
 		)
 	})
 
-	Utils.loadTextureData("res/atmosphere/inscatter.raw", function (data) {
+	Utils.loadTextureData("assets/atmosphere/inscatter.raw", function (data) {
 		SCATTERING_TEXTURE = new BABYLON.RawTexture3D(
 			data,
 			SCATTERING_TEXTURE_WIDTH,
@@ -189,7 +189,7 @@ function loadAtmosphereDataTextures(callback, scene) {
 		)
 	})
 
-	Utils.loadTextureData("res/atmosphere/transmittance.raw", function (data) {
+	Utils.loadTextureData("assets/atmosphere/transmittance.raw", function (data) {
 		TRANSMITTANCE_TEXTURE = new BABYLON.RawTexture(
 			data,
 			TRANSMITTANCE_TEXTURE_WIDTH,

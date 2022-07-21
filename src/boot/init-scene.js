@@ -1,9 +1,9 @@
-import { Planet } from "./planet/planet.js"
-import { createStar } from "./star.js"
-import { Utils } from "./utils.js"
-import { createCamera } from "./cameras/camera.js"
-import { createUICamera } from "./cameras/ui-camera.js"
-import { createDebugOverlay } from "./debug-overlay.js"
+import { Planet } from "../planet/planet.js"
+import { createStar } from "../star.js"
+import { Utils } from "../utils.js"
+import { createCamera } from "../cameras/camera.js"
+import { createUICamera } from "../cameras/ui-camera.js"
+import { createDebugOverlay } from "../debug/debug-overlay.js"
 
 const phi = 90
 const theta = 90

@@ -1,7 +1,7 @@
 import { Utils } from "../../../utils.js"
 import { COMP_GL, COMP_GL_PROGRAM } from "../../../loader/loader.js"
 const IcoWorker = new Worker("/src/planet/gen/icosahedron/worker.js", { type: "module" })
-import { debugOverlay } from '../../../debug-overlay.js'
+import { debugOverlay } from '../../../debug/debug-overlay.js'
 
 let IN_TRANSFORM_BUFFER = null
 let OUT_TRANSFORM_BUFFER = null

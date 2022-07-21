@@ -1,4 +1,4 @@
-import { crel } from "../lib/crel.es.js"
+import { crel } from "../../lib/crel.es.js"
 
 export const boot = () => {
 	const canvas = crel("canvas", { width: 1280, height: 600 })

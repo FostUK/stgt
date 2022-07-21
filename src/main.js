@@ -1,5 +1,5 @@
-import { boot } from "./boot.js"
-import { initScene } from "./init-scene.js"
+import { boot } from "./boot/boot.js"
+import { initScene } from "./boot/init-scene.js"
 import { Utils } from "./utils.js"
 import { postProcess } from "./post-process.js"
 import { loadResources } from "./loader/loader.js"
@@ -7,8 +7,8 @@ import { setupPointerLock } from "./controls/mouse.js"
 import { getStep } from "./step.js"
 import { models } from "./loader/models.js"
 import { createUi } from "./ui/ui.js"
-import { createInput } from "./input.js"
-import { telemetry, updateFlightModel } from "./flight-model.js"
+import { createInput } from "./controls/input.js"
+import { telemetry, updateFlightModel } from "./controls/flight-model.js"
 ;(window.oldWorkers || []).forEach(w => w.terminate())
 Utils.clearAllTimeoutsAndIntervals()
 

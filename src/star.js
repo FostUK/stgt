@@ -3,7 +3,7 @@
 export const createStar = (scene, config) => {
 	const mesh = BABYLON.MeshBuilder.CreateDisc(
 		config.name,
-		{ radius: 1000, arc: 1, tessellation: 64, sideOrientation: BABYLON.Mesh.DEFAULTSIDE },
+		{ radius: 2000, arc: 1, tessellation: 64, sideOrientation: BABYLON.Mesh.DEFAULTSIDE },
 		scene,
 	)
 

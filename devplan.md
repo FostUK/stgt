@@ -12,3 +12,7 @@
 * Implement better controls using gamepad.
 * bounce positions off server
 * Fix triplanar mapping
+
+## BUGS
+* Triplanar mapping shimmer
+* planet-material.js loading hash config ( delete /Hash/config.json)

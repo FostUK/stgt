@@ -1,6 +1,6 @@
 import { uiGreen } from "./colours.js"
-import { controls } from "../controls.js"
-import { clamp } from "../game-maths.js"
+import { controls } from "../controls/controls.js"
+import { clamp } from "../../lib/game-maths.js"
 
 const createLegend = () => {
 	const control = new BABYLON.GUI.TextBlock()

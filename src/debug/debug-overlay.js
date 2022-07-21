@@ -1,16 +1,5 @@
-import { crel } from "../lib/crel.es.js"
-import { config } from './config.js'
-
-export const configX = {
-	mouseSensitivity: 0.005,
-	cameraSpeed: 0.0075,
-	mouseMin: -75,
-	mouseMax: 90,
-
-	mouseX: 0,
-	mouseY: 0,
-}
-
+import { crel } from "../../lib/crel.es.js"
+import { controls } from '../controls/controls.js'
 
 const toggleWireFrame = mat => () => (mat.wireframe = !mat.wireframe)
 
@@ -23,15 +12,15 @@ export const createDebugOverlay = (planet, engine) => {
 	const fpsCounter = crel("div")
 	const vertexCount = crel("div")
 	const level = crel("div")
-	const cameraInfo = crel("div")
+	const padInfo = crel("div")
 
-	const container = crel("div", { id: "ui" }, wireframeButton, fpsCounter, vertexCount, level, cameraInfo)
+	const container = crel("div", { id: "ui" }, wireframeButton, fpsCounter, vertexCount, level, padInfo)
 
 	document.body.appendChild(container)
 
 	const update = () => {
 		fpsCounter.innerText = `FPS: ${engine.getFps().toFixed()}`
-		cameraInfo.innerText = `MOUSEX: ${config.mouseX}\nMOUSEY: ${config.mouseY}`
+		padInfo.innerText = `Throttle: ${controls.throttle}`
 	}
 
 	const workUpdate = p => {

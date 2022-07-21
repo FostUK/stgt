@@ -1,5 +1,5 @@
 import { controls } from "./controls.js"
-import { clamp } from "./game-maths.js"
+import { clamp } from "../../lib/game-maths.js"
 
 const mass = 5165
 const airResistance = 60
