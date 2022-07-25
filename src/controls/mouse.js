@@ -20,13 +20,13 @@ export const setupPointerLock = canvas => {
 //}
 
 function updateCamera() {
-	config.mouseX += main.mouseDX * config.mouseSensitivity * main.delta
-	config.mouseY += main.mouseDY * config.mouseSensitivity * main.delta
-	config.mouseY = Utils.clamp(config.mouseY, config.mouseMin, config.mouseMax)
+	config.mouse.x += main.mouseDX * config.mouse.sensitivity * main.delta
+	config.mouse.y += main.mouseDY * config.mouse.sensitivity * main.delta
+	config.mouse.y = Utils.clamp(config.mouse.y, config.mouse.min, config.mouse.max)
 
 	main.camera.rotation = Utils.lerp3(
 		main.camera.rotation,
-		new BABYLON.Vector3(BABYLON.Tools.ToRadians(config.mouseY), BABYLON.Tools.ToRadians(config.mouseX), 0),
-		config.cameraSpeed * main.delta,
+		new BABYLON.Vector3(BABYLON.Tools.ToRadians(config.mouse.y), BABYLON.Tools.ToRadians(config.mouse.x), 0),
+		config.mouse.cameraSpeed * main.delta,
 	)
 }

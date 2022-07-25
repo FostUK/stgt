@@ -4,6 +4,7 @@ import { Utils } from "../utils.js"
 import { createCamera } from "../cameras/camera.js"
 import { createUICamera } from "../cameras/ui-camera.js"
 import { createDebugOverlay } from "../debug/debug-overlay.js"
+import { config } from "../config.js"
 
 const phi = 90
 const theta = 90
@@ -14,17 +15,9 @@ export const initScene = (scene, engine, canvas) => {
 
 	const uiCamera = createUICamera()
 
-	scene.activeCameras = [camera, uiCamera];
+	scene.activeCameras = [camera, uiCamera]
 
-	const planet = new Planet(
-		{
-			name: "Earth",
-			position: new BABYLON.Vector3(0, 0, 0),
-			radius: 1000, //100000//6371000
-			maxHeight: 0.01,
-		},
-		scene,
-	)
+	const planet = new Planet(config.planet, scene)
 
 	const debugOverlay = createDebugOverlay(planet, engine)
 

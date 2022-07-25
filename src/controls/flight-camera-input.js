@@ -1,6 +1,7 @@
 // Reference: https://playground.babylonjs.com/#CTCSWQ#1
 
 import { telemetry } from "./flight-model.js"
+import { config } from "../config.js"
 
 const halfPI = Math.PI / 2
 
@@ -36,9 +37,7 @@ export class flightCameraInput {
 			this.camera._transformedDirection,
 		)
 
-
 		this.camera.cameraDirection.addInPlace(this.camera._transformedDirection)
-
 
 		const currentRotation = BABYLON.Quaternion.RotationYawPitchRoll(
 			this.camera.rotation.y,
@@ -49,6 +48,8 @@ export class flightCameraInput {
 		const rotationChange = BABYLON.Quaternion.RotationYawPitchRoll(telemetry.yaw, telemetry.pitch, telemetry.roll)
 		currentRotation.multiplyInPlace(rotationChange)
 		currentRotation.toEulerAnglesToRef(this.camera.rotation)
+
+		telemetry.altitude = this.camera.position.length() - config.planet.radius //TODO Dirty setting altitude outside of flight model
 	}
 
 	#onKeyDown(event) {

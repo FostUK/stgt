@@ -1,22 +1,22 @@
 # DEV PLAN
 
-
-* Ship handling
+* Admin
+  * Update Readme
+* Controls / Flight Model
+  * Add Altimeter
   * Add in atmospheric drag to slow you down closer to ground level
   * Add in atmospheric banking
   * Prevent crashing through ground.
-* Flatten to base zero and push to cloud.
-* Fix gui overlay
-* Work out control scheme.
   * Don't lock mouse. Use pad only for now
-* Fix triplanar mapping of planet texture
-* Fix planet shading
+* Rendering
+  * Fix planet shading
+  * Fix triplanar mapping of planet texture
 * Create / Add cockpit model
 * Babylonjs - can we use lws default extension to allow es6 module loads? 
 * Load Ship (convert loader to Promise.all format)
-* Implement better controls using gamepad.
-* bounce positions off server
-* Fix triplanar mapping
+* Networking
+  * Bounce positions off server
+
 
 ## BUGS
 * Triplanar mapping shimmer

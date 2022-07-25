@@ -2,7 +2,7 @@ import { controls } from "./controls.js"
 import { clamp } from "../../lib/game-maths.js"
 
 const mass = 5165
-const airResistance = 60
+const airResistance = 10500
 const cyclicDamping = 1
 
 let accel = { x: 0, y: 0, z: 0 }
@@ -12,8 +12,8 @@ let currentCyclic = {
 	y: 0,
 }
 
-const maxV = 0.005
-const minV = -0.005
+const maxV = 10//0.005
+const minV = -10//-0.005
 
 const updateRotation = () => {
 	currentCyclic.x = currentCyclic.x + clamp(controls.cyclic.x - currentCyclic.x, -cyclicDamping, cyclicDamping)
@@ -34,8 +34,10 @@ const updateVelocity = () => {
 	//accel.y = -(controls.cyclic.y * 4 + airResistance * telemetry.velocity.y) / mass
 	//telemetry.velocity.y = telemetry.velocity.y + accel.y
 
+	telemetry.drag = airResistance / Math.max(1, telemetry.altitude)
+
 	//TODO consider gravity
-	accel.z = (controls.throttle - airResistance * telemetry.velocity.z) / mass
+	accel.z = (controls.throttle - telemetry.drag * telemetry.velocity.z) / mass
 	telemetry.velocity.z = clamp(telemetry.velocity.z + accel.z, minV, maxV)
 }
 
@@ -50,5 +52,6 @@ export const telemetry = {
 	pitch: 0,
 	roll: 0,
 	yaw: 0,
-	altitude: 0
+	altitude: 0,
+	drag: 0,
 }

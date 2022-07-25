@@ -1,5 +1,5 @@
 import { crel } from "../../lib/crel.es.js"
-import { controls } from '../controls/controls.js'
+import { telemetry } from '../controls/flight-model.js'
 
 const toggleWireFrame = mat => () => (mat.wireframe = !mat.wireframe)
 
@@ -20,7 +20,8 @@ export const createDebugOverlay = (planet, engine) => {
 
 	const update = () => {
 		fpsCounter.innerText = `FPS: ${engine.getFps().toFixed()}`
-		padInfo.innerText = `Throttle: ${controls.throttle}`
+		padInfo.innerText = `Throttle: ${telemetry.velocity.z.toFixed(2)}
+		Altitude: ${telemetry.altitude.toFixed(2)}`
 	}
 
 	const workUpdate = p => {
