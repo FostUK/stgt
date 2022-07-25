@@ -1,5 +1,10 @@
 # DEV PLAN
 
+
+* Ship handling
+  * Add in atmospheric drag to slow you down closer to ground level
+  * Add in atmospheric banking
+  * Prevent crashing through ground.
 * Flatten to base zero and push to cloud.
 * Fix gui overlay
 * Work out control scheme.

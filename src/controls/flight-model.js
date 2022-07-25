@@ -12,6 +12,9 @@ let currentCyclic = {
 	y: 0,
 }
 
+const maxV = 0.005
+const minV = -0.005
+
 const updateRotation = () => {
 	currentCyclic.x = currentCyclic.x + clamp(controls.cyclic.x - currentCyclic.x, -cyclicDamping, cyclicDamping)
 	currentCyclic.y = currentCyclic.y + clamp(controls.cyclic.y - currentCyclic.y, -cyclicDamping, cyclicDamping)
@@ -33,7 +36,7 @@ const updateVelocity = () => {
 
 	//TODO consider gravity
 	accel.z = (controls.throttle - airResistance * telemetry.velocity.z) / mass
-	telemetry.velocity.z = clamp(telemetry.velocity.z + accel.z, -100, 100)
+	telemetry.velocity.z = clamp(telemetry.velocity.z + accel.z, minV, maxV)
 }
 
 export const updateFlightModel = () => {
@@ -47,4 +50,5 @@ export const telemetry = {
 	pitch: 0,
 	roll: 0,
 	yaw: 0,
+	altitude: 0
 }
