@@ -1,94 +1,27 @@
 import { Utils } from "../utils.js"
+import { loadShaders } from './load-shaders.js'
+
+let TERRAIN_TRANSFORM = ""
 
 export const loadResources = (callback, scene, canvas) => {
-	var load = function (state) {
-		switch (state) {
-			case 0:
-				loadShaders(() => load(1))
-				break
-			case 1:
-				loadAtmosphereDataTextures(() => load(2), scene)
-				break
-			case 2:
-				loadAssets(() => load(3), scene)
-				break
-			case 3:
-				setupCompGLProgram(() => load(4), canvas)
-				break
-			default:
-				callback()
-				break
-		}
-	}
+	let stageIdx = 0
+	let stages
 
-	load(0)
-}
+	const nextStage = value => stages[stageIdx++](value)
 
-var POSTPROCESS = ""
-var BASE_VERTEX = ""
-var PRECOMPUTEHASH = ""
-var ICOPLANET_VERTEX = ""
-var BASE_PBR_FRAGMENT = ""
-var TERRAIN_TRANSFORM = ""
-var ICOPLANET_FRAGMENT = ""
+	stages = [
+		() => loadShaders(nextStage),
+		tt => {
+			TERRAIN_TRANSFORM = tt
+			nextStage()
+		},
+		() => loadAtmosphereDataTextures(nextStage, scene),
+		() => loadAssets(nextStage, scene),
+		() => setupCompGLProgram(nextStage, canvas),
+		callback,
+	]
 
-const shaderDir = "src/planet/shdr/"
-
-const shaders = [
-	"Base_Vertex",
-	"PBRFrag",
-	"Tools",
-	"noise/SimplexNoise",
-	"IcoPlanetVertex",
-	"IcoPlanetFragment",
-	"noise/Cellular3D",
-	"noise/SNoise",
-	"post/post-process",
-	"ocean/Ocean",
-	"noise/PrecomputeHash",
-	"atmosphere/Eric_B.atmosphere",
-	"atmosphere/Sean_O.atmosphere",
-	"planet/TerrainTransform",
-	"post/post-process-tools",
-	"post/lens-flares",
-]
-
-const loadShader = name => Utils.loadFile(`${shaderDir}${name}.glsl`)
-
-const unMapShaders = callback => data => {
-	BASE_VERTEX = data[0]
-	BASE_PBR_FRAGMENT = data[1]
-	ICOPLANET_VERTEX = data[4]
-	ICOPLANET_FRAGMENT = data[5]
-	POSTPROCESS = data[8]
-	PRECOMPUTEHASH = data[10]
-	const NOISE = data[6] + data[7] + data[3]
-	TERRAIN_TRANSFORM = data[2] + NOISE + data[13]
-
-	BABYLON.Effect.IncludesShadersStore["Tools"] = data[2]
-	BABYLON.Effect.IncludesShadersStore["Noise3D"] = NOISE
-
-	BABYLON.Effect.IncludesShadersStore["Ocean"] = data[9]
-	BABYLON.Effect.IncludesShadersStore["PostProcessTools"] = data[14]
-	BABYLON.Effect.IncludesShadersStore["LensFlares"] = data[15]
-	BABYLON.Effect.IncludesShadersStore["PrecomputedAtmosphericScattering"] = data[11]
-	BABYLON.Effect.IncludesShadersStore["SeanONeilAtmosphericScattering"] = data[12]
-
-	//BABYLON.Effect.IncludesShadersStore["PlanetFragment"] = data[13];
-
-	BABYLON.Effect.ShadersStore["QuadTreeVertexShader"] = BASE_VERTEX
-	BABYLON.Effect.ShadersStore["/assets/textures/hashFragmentShader"] = PRECOMPUTEHASH
-	BABYLON.Effect.ShadersStore["PostProcessFragmentShader"] = POSTPROCESS
-	BABYLON.Effect.ShadersStore["IcoPlanetVertexShader"] = ICOPLANET_VERTEX
-	BABYLON.Effect.ShadersStore["QuadTreeFragmentShader"] = BASE_PBR_FRAGMENT
-	BABYLON.Effect.ShadersStore["IcoPlanetFragmentShader"] = ICOPLANET_FRAGMENT
-
-	console.log("All Shaders loaded")
-	callback()
-}
-
-function loadShaders(callback) {
-	Promise.all(shaders.map(loadShader)).then(unMapShaders(callback))
+	nextStage()
 }
 
 let ASSET_MANAGER = null
@@ -98,17 +31,15 @@ export let GRASS_ONE_TEXTURE = []
 const loadAssets = (callback, scene) => {
 	ASSET_MANAGER = new BABYLON.AssetsManager(scene)
 
-	ASSET_MANAGER.onProgress = function (remainingCount, totalCount, lastFinishedTask) {
+	ASSET_MANAGER.onProgress = (remainingCount, totalCount, lastFinishedTask) => {
 		console.log(remainingCount + 1 + " out of " + totalCount + " textures need to be loaded.")
 	}
 
-	ASSET_MANAGER.onTaskErrorObservable.add(function (task) {
+	ASSET_MANAGER.onTaskErrorObservable.add(task => {
 		console.log("task failed: ", task.errorObject.message, task.errorObject.exception)
 	})
 
-	ASSET_MANAGER.onFinish = function (tasks) {
-		callback()
-	}
+	ASSET_MANAGER.onFinish = callback
 
 	/// Rock 1
 	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/diff_1k.png").onSuccess = function (
