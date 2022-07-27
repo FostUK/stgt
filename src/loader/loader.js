@@ -1,4 +1,4 @@
-import { Utils } from '../utils.js'
+import { Utils } from "../utils.js"
 
 export const loadResources = (callback, scene, canvas) => {
 	var load = function (state) {
@@ -18,7 +18,7 @@ export const loadResources = (callback, scene, canvas) => {
 			default:
 				callback()
 				break
-	}
+		}
 	}
 
 	load(0)
@@ -32,61 +32,63 @@ var BASE_PBR_FRAGMENT = ""
 var TERRAIN_TRANSFORM = ""
 var ICOPLANET_FRAGMENT = ""
 
+const shaderDir = "src/planet/shdr/"
+
+const shaders = [
+	"Base_Vertex",
+	"PBRFrag",
+	"Tools",
+	"noise/SimplexNoise",
+	"IcoPlanetVertex",
+	"IcoPlanetFragment",
+	"noise/Cellular3D",
+	"noise/SNoise",
+	"post/post-process",
+	"ocean/Ocean",
+	"noise/PrecomputeHash",
+	"atmosphere/Eric_B.atmosphere",
+	"atmosphere/Sean_O.atmosphere",
+	"planet/TerrainTransform",
+	"post/post-process-tools",
+	"post/lens-flares",
+]
+
+const loadShader = name => Utils.loadFile(`${shaderDir}${name}.glsl`)
+
+const unMapShaders = callback => data => {
+	BASE_VERTEX = data[0]
+	BASE_PBR_FRAGMENT = data[1]
+	ICOPLANET_VERTEX = data[4]
+	ICOPLANET_FRAGMENT = data[5]
+	POSTPROCESS = data[8]
+	PRECOMPUTEHASH = data[10]
+	const NOISE = data[6] + data[7] + data[3]
+	TERRAIN_TRANSFORM = data[2] + NOISE + data[13]
+
+	BABYLON.Effect.IncludesShadersStore["Tools"] = data[2]
+	BABYLON.Effect.IncludesShadersStore["Noise3D"] = NOISE
+
+	BABYLON.Effect.IncludesShadersStore["Ocean"] = data[9]
+	BABYLON.Effect.IncludesShadersStore["PostProcessTools"] = data[14]
+	BABYLON.Effect.IncludesShadersStore["LensFlares"] = data[15]
+	BABYLON.Effect.IncludesShadersStore["PrecomputedAtmosphericScattering"] = data[11]
+	BABYLON.Effect.IncludesShadersStore["SeanONeilAtmosphericScattering"] = data[12]
+
+	//BABYLON.Effect.IncludesShadersStore["PlanetFragment"] = data[13];
+
+	BABYLON.Effect.ShadersStore["QuadTreeVertexShader"] = BASE_VERTEX
+	BABYLON.Effect.ShadersStore["/assets/textures/hashFragmentShader"] = PRECOMPUTEHASH
+	BABYLON.Effect.ShadersStore["PostProcessFragmentShader"] = POSTPROCESS
+	BABYLON.Effect.ShadersStore["IcoPlanetVertexShader"] = ICOPLANET_VERTEX
+	BABYLON.Effect.ShadersStore["QuadTreeFragmentShader"] = BASE_PBR_FRAGMENT
+	BABYLON.Effect.ShadersStore["IcoPlanetFragmentShader"] = ICOPLANET_FRAGMENT
+
+	console.log("All Shaders loaded")
+	callback()
+}
+
 function loadShaders(callback) {
-	Promise.all([
-		Utils.loadFile("src/planet/shdr/Base_Vertex.glsl"), //data 0
-		Utils.loadFile("src/planet/shdr/PBRFrag.glsl"), //data 1
-		Utils.loadFile("src/planet/shdr/Tools.glsl"), //data 2
-		Utils.loadFile("src/planet/shdr/noise/SimplexNoise.glsl"), //data 3
-		Utils.loadFile("src/planet/shdr/IcoPlanetVertex.glsl"), //data 4
-		Utils.loadFile("src/planet/shdr/IcoPlanetFragment.glsl"), //data 5
-
-		Utils.loadFile("src/planet/shdr/noise/Cellular3D.glsl"), //data 6
-		Utils.loadFile("src/planet/shdr/noise/SNoise.glsl"), //data 7
-
-		Utils.loadFile("src/planet/shdr/post/post-process.glsl"), //data 8
-		Utils.loadFile("src/planet/shdr/ocean/Ocean.glsl"), //data 9
-
-		Utils.loadFile("src/planet/shdr/noise/PrecomputeHash.glsl"), //data 10
-
-		Utils.loadFile("src/planet/shdr/atmosphere/Eric_B.atmosphere.glsl"), //data 11
-		Utils.loadFile("src/planet/shdr/atmosphere/Sean_O.atmosphere.glsl"), //data 12
-
-		Utils.loadFile("src/planet/shdr/planet/TerrainTransform.glsl"), //data 13
-
-		Utils.loadFile("src/planet/shdr/post/post-process-tools.glsl"), //data 14
-		Utils.loadFile("src/planet/shdr/post/lens-flares.glsl"), //data 15
-	]).then(function (data) {
-		BASE_VERTEX = data[0]
-		BASE_PBR_FRAGMENT = data[1]
-		ICOPLANET_VERTEX = data[4]
-		ICOPLANET_FRAGMENT = data[5]
-		POSTPROCESS = data[8]
-		PRECOMPUTEHASH = data[10]
-		const NOISE = data[6] + data[7] + data[3]
-		TERRAIN_TRANSFORM = data[2] + NOISE + data[13]
-
-		BABYLON.Effect.IncludesShadersStore["Tools"] = data[2]
-		BABYLON.Effect.IncludesShadersStore["Noise3D"] = NOISE
-
-		BABYLON.Effect.IncludesShadersStore["Ocean"] = data[9]
-		BABYLON.Effect.IncludesShadersStore["PostProcessTools"] = data[14]
-		BABYLON.Effect.IncludesShadersStore["LensFlares"] = data[15]
-		BABYLON.Effect.IncludesShadersStore["PrecomputedAtmosphericScattering"] = data[11]
-		BABYLON.Effect.IncludesShadersStore["SeanONeilAtmosphericScattering"] = data[12]
-
-		//BABYLON.Effect.IncludesShadersStore["PlanetFragment"] = data[13];
-
-		BABYLON.Effect.ShadersStore["QuadTreeVertexShader"] = BASE_VERTEX
-		BABYLON.Effect.ShadersStore["/assets/textures/hashFragmentShader"] = PRECOMPUTEHASH
-		BABYLON.Effect.ShadersStore["PostProcessFragmentShader"] = POSTPROCESS
-		BABYLON.Effect.ShadersStore["IcoPlanetVertexShader"] = ICOPLANET_VERTEX
-		BABYLON.Effect.ShadersStore["QuadTreeFragmentShader"] = BASE_PBR_FRAGMENT
-		BABYLON.Effect.ShadersStore["IcoPlanetFragmentShader"] = ICOPLANET_FRAGMENT
-
-		console.log("All Shaders loaded")
-		callback()
-	})
+	Promise.all(shaders.map(loadShader)).then(unMapShaders(callback))
 }
 
 let ASSET_MANAGER = null
@@ -109,13 +111,19 @@ const loadAssets = (callback, scene) => {
 	}
 
 	/// Rock 1
-	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/diff_1k.png").onSuccess = function (task) {
+	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/diff_1k.png").onSuccess = function (
+		task,
+	) {
 		ROCK_ONE_TEXTURE[0] = task.texture
 	}
-	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/nor_1k.png").onSuccess = function (task) {
+	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/nor_1k.png").onSuccess = function (
+		task,
+	) {
 		ROCK_ONE_TEXTURE[1] = task.texture
 	}
-	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/rough_1k.png").onSuccess = function (task) {
+	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/rough_1k.png").onSuccess = function (
+		task,
+	) {
 		ROCK_ONE_TEXTURE[2] = task.texture
 	}
 	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/ao_1k.png").onSuccess = function (task) {
@@ -138,7 +146,9 @@ const loadAssets = (callback, scene) => {
 	) {
 		GRASS_ONE_TEXTURE[2] = task.texture
 	}
-	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/ao_1k.png").onSuccess = function (task) {
+	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/ao_1k.png").onSuccess = function (
+		task,
+	) {
 		GRASS_ONE_TEXTURE[3] = task.texture
 	}
 
