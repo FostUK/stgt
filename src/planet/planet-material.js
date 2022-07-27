@@ -62,14 +62,12 @@ export const planetMaterial = (planet, onComplete) => {
 	setFeedbackUniformFloat("warpAmplitude", planet.properties.warpAmplitude)
 	setFeedbackUniformFloat("warpFrequency", planet.properties.warpFrequency)
 
-
-	//TODO Hash config loaded here
-	const hashTexture = new BABYLON.CustomProceduralTexture(planet.name, "Hash", HASH_TEXTURE_WIDTH, planet.getScene())
+	const hashTexture = new BABYLON.CustomProceduralTexture(planet.name, "/assets/textures/hash", HASH_TEXTURE_WIDTH, planet.getScene())
 	hashTexture.delayLoad()
 	hashTexture.setInt("SEED", planet.seedHash)
 	material.setTexture("hashTexture", hashTexture)
 
-	for (var i = 0; i < GRASS_ONE_TEXTURE.length; i++) {
+	for (let i = 0; i < GRASS_ONE_TEXTURE.length; i++) {
 		console.log("DOIT")
 		material.setTexture("grassTexture[" + i + "]", GRASS_ONE_TEXTURE[i])
 		material.setTexture("rockTexture[" + i + "]", ROCK_ONE_TEXTURE[i])

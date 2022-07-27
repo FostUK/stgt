@@ -18,7 +18,7 @@ export const loadResources = (callback, scene, canvas) => {
 			default:
 				callback()
 				break
-		}
+	}
 	}
 
 	load(0)
@@ -78,7 +78,7 @@ function loadShaders(callback) {
 		//BABYLON.Effect.IncludesShadersStore["PlanetFragment"] = data[13];
 
 		BABYLON.Effect.ShadersStore["QuadTreeVertexShader"] = BASE_VERTEX
-		BABYLON.Effect.ShadersStore["HashFragmentShader"] = PRECOMPUTEHASH
+		BABYLON.Effect.ShadersStore["/assets/textures/hashFragmentShader"] = PRECOMPUTEHASH
 		BABYLON.Effect.ShadersStore["PostProcessFragmentShader"] = POSTPROCESS
 		BABYLON.Effect.ShadersStore["IcoPlanetVertexShader"] = ICOPLANET_VERTEX
 		BABYLON.Effect.ShadersStore["QuadTreeFragmentShader"] = BASE_PBR_FRAGMENT
@@ -264,5 +264,5 @@ function setupCompGLProgram(callback, canvas) {
 
 	callback()
 
-	return {COMP_GL, COMP_GL_PROGRAM}
+	return { COMP_GL, COMP_GL_PROGRAM }
 }

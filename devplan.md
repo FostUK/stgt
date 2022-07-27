@@ -1,5 +1,8 @@
 # DEV PLAN
 
+* Gameplay
+  * Basic collision (need to avoid negative altitude to start with)
+
 * Admin
   * Update Readme
 * Controls / Flight Model
@@ -20,4 +23,3 @@
 
 ## BUGS
 * Triplanar mapping shimmer
-* planet-material.js loading hash config ( delete /Hash/config.json)
