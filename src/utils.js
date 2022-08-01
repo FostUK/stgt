@@ -363,7 +363,7 @@ Utils.Cross = function (left, right) {
 }
 
 Utils.M33xV3 = function (mat, vec, arr = false) {
-	res = [0, 0, 0]
+	let res = [0, 0, 0]
 	vec = arr == true ? vec : Utils.VecToArray(vec)
 	for (let i = 0; i < 3; i++) {
 		for (let j = 0; j < 3; j++) {
@@ -408,12 +408,12 @@ Utils.vectorToSpherical = function (v, degrees = false) {
 }
 
 Utils.clearAllTimeoutsAndIntervals = function () {
-	var id = Math.max(
+	let id = Math.max(
 		setTimeout(function () {}, 0),
 		setInterval(function () {}, 0),
 	)
 
-	var i = 0
+	let i = 0
 	while (id--) {
 		clearTimeout(id)
 		clearInterval(id)
@@ -451,36 +451,18 @@ Utils.loadFile = function (url) {
 	})
 }
 
-//////////////////////////////////////////////////////////////////////
-/// Copyright (c) 2018 Eric Bruneton
-/// * All rights reserved.
-/// * from: demo.js
-////////////////////////////////////////////////////////////////////
-Utils.loadTextureData = function (textureName, callback) {
-	const xhr = new XMLHttpRequest()
-	xhr.open("GET", textureName)
-	xhr.responseType = "arraybuffer"
-	xhr.onload = event => {
-		const data = new DataView(xhr.response)
-		const array = new Float32Array(data.byteLength / Float32Array.BYTES_PER_ELEMENT)
-		for (var i = 0; i < array.length; ++i) {
-			array[i] = data.getFloat32(i * Float32Array.BYTES_PER_ELEMENT, true)
-		}
-		callback(array)
-	}
-	xhr.send()
-}
-//////////////////////////////////////////////////////////////
+Utils.fetchTexture = path =>
+	fetch(path)
+		.then(response => response.arrayBuffer())
+		.then(buffer => new Float32Array(buffer))
 
-Utils.getTextureData = function (texture) {
-	return {
-		data: new Uint8ClampedArray(texture.readPixels()),
-		width: texture.getSize().width,
-		height: texture.getSize().height,
-	}
-}
+Utils.getTextureData = texture => ({
+	data: new Uint8ClampedArray(texture.readPixels()),
+	width: texture.getSize().width,
+	height: texture.getSize().height,
+})
 
-Utils.sampleTexture = function (texture, x, y) {
+Utils.sampleTexture = (texture, x, y) => {
 	x = Utils.repeat(x, 0.0, 1.0)
 	y = Utils.repeat(y, 0.0, 1.0)
 	x = Math.floor(texture.width * x)
@@ -494,20 +476,20 @@ Utils.sampleTexture = function (texture, x, y) {
 	return [r, g, b, a]
 }
 
-Utils.downloadImagesAsync = function (urls) {
-	return new Promise(function (resolve, reject) {
-		var pending = urls.length
-		var result = []
+Utils.downloadImagesAsync = urls => {
+	return new Promise(resolve => {
+		let pending = urls.length
+		let result = []
 		if (pending === 0) {
 			resolve([])
 			return
 		}
 		urls.forEach(function (url, i) {
-			var image = new Image()
+			let image = new Image()
 			//image.addEventListener("load", function() {
 			image.onload = function () {
-				var tempcanvas = document.createElement("canvas")
-				var tempcontext = tempcanvas.getContext("2d")
+				let tempcanvas = document.createElement("canvas")
+				let tempcontext = tempcanvas.getContext("2d")
 				tempcanvas.width = map.width
 				tempcanvas.height = map.height
 				tempcontext.drawImage(image, 0, 0, map.width, map.height)
@@ -522,6 +504,5 @@ Utils.downloadImagesAsync = function (urls) {
 	})
 }
 
-Utils.planeDotCoordinate = function (plane, point) {
-	return plane.normal._x * point._x + plane.normal._y * point._y + plane.normal._z * point._z + plane.d
-}
+Utils.planeDotCoordinate = (plane, point) =>
+	plane.normal._x * point._x + plane.normal._y * point._y + plane.normal._z * point._z + plane.d

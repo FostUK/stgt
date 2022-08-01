@@ -1,7 +1,11 @@
-import { Utils } from "../utils.js"
-import { loadShaders } from './load-shaders.js'
+import { loadShaders } from "./load-shaders.js"
+import { loadAtmospheres } from "./load-atmospheres.js"
 
 let TERRAIN_TRANSFORM = ""
+export let IRRADIANCE_TEXTURE
+export let SCATTERING_TEXTURE
+export let TRANSMITTANCE_TEXTURE
+export let SINGLE_MIE_SCATTERING_TEXTURE
 
 export const loadResources = (callback, scene, canvas) => {
 	let stageIdx = 0
@@ -15,7 +19,15 @@ export const loadResources = (callback, scene, canvas) => {
 			TERRAIN_TRANSFORM = tt
 			nextStage()
 		},
-		() => loadAtmosphereDataTextures(nextStage, scene),
+		() => {
+			loadAtmospheres(scene).then(textures => {
+				IRRADIANCE_TEXTURE = textures.irradiance
+				SCATTERING_TEXTURE = textures.scattering
+				TRANSMITTANCE_TEXTURE = textures.transmittance
+				SINGLE_MIE_SCATTERING_TEXTURE = textures.mie
+				nextStage()
+			})
+		},
 		() => loadAssets(nextStage, scene),
 		() => setupCompGLProgram(nextStage, canvas),
 		callback,
@@ -42,19 +54,13 @@ const loadAssets = (callback, scene) => {
 	ASSET_MANAGER.onFinish = callback
 
 	/// Rock 1
-	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/diff_1k.png").onSuccess = function (
-		task,
-	) {
+	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/diff_1k.png").onSuccess = task => {
 		ROCK_ONE_TEXTURE[0] = task.texture
 	}
-	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/nor_1k.png").onSuccess = function (
-		task,
-	) {
+	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/nor_1k.png").onSuccess = task => {
 		ROCK_ONE_TEXTURE[1] = task.texture
 	}
-	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/rough_1k.png").onSuccess = function (
-		task,
-	) {
+	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/rough_1k.png").onSuccess = task => {
 		ROCK_ONE_TEXTURE[2] = task.texture
 	}
 	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/ao_1k.png").onSuccess = function (task) {
@@ -62,119 +68,20 @@ const loadAssets = (callback, scene) => {
 	}
 
 	/// Grass 1
-	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/diff_1k.png").onSuccess = function (
-		task,
-	) {
+	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/diff_1k.png").onSuccess = task => {
 		GRASS_ONE_TEXTURE[0] = task.texture
 	}
-	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/nor_1k.png").onSuccess = function (
-		task,
-	) {
+	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/nor_1k.png").onSuccess = task => {
 		GRASS_ONE_TEXTURE[1] = task.texture
 	}
-	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/rough_1k.png").onSuccess = function (
-		task,
-	) {
+	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/rough_1k.png").onSuccess = task => {
 		GRASS_ONE_TEXTURE[2] = task.texture
 	}
-	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/ao_1k.png").onSuccess = function (
-		task,
-	) {
+	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/ao_1k.png").onSuccess = task => {
 		GRASS_ONE_TEXTURE[3] = task.texture
 	}
 
 	ASSET_MANAGER.load()
-}
-
-export let IRRADIANCE_TEXTURE
-export let SCATTERING_TEXTURE
-export let TRANSMITTANCE_TEXTURE
-export let SINGLE_MIE_SCATTERING_TEXTURE
-
-const TRANSMITTANCE_TEXTURE_WIDTH = 256
-const TRANSMITTANCE_TEXTURE_HEIGHT = 64
-const SCATTERING_TEXTURE_WIDTH = 256
-const SCATTERING_TEXTURE_HEIGHT = 128
-const SCATTERING_TEXTURE_DEPTH = 32
-const IRRADIANCE_TEXTURE_WIDTH = 64
-const IRRADIANCE_TEXTURE_HEIGHT = 16
-
-function loadAtmosphereDataTextures(callback, scene) {
-	// Atmosphere Shader Textures
-	Utils.loadTextureData("assets/atmosphere/irradiance.raw", function (data) {
-		IRRADIANCE_TEXTURE = new BABYLON.RawTexture(
-			data,
-			IRRADIANCE_TEXTURE_WIDTH,
-			IRRADIANCE_TEXTURE_HEIGHT,
-			BABYLON.Engine.TEXTUREFORMAT_RGB,
-			scene,
-			false,
-			false,
-			BABYLON.Texture.LINEAR_LINEAR,
-			BABYLON.Engine.TEXTURETYPE_FLOAT,
-		)
-	})
-
-	Utils.loadTextureData("assets/atmosphere/inscatter.raw", function (data) {
-		SCATTERING_TEXTURE = new BABYLON.RawTexture3D(
-			data,
-			SCATTERING_TEXTURE_WIDTH,
-			SCATTERING_TEXTURE_HEIGHT,
-			SCATTERING_TEXTURE_DEPTH,
-			BABYLON.Engine.TEXTUREFORMAT_RGBA,
-			scene,
-			false,
-			false,
-			BABYLON.Texture.LINEAR_LINEAR,
-			BABYLON.Engine.TEXTURETYPE_FLOAT,
-		)
-	})
-
-	Utils.loadTextureData("assets/atmosphere/transmittance.raw", function (data) {
-		TRANSMITTANCE_TEXTURE = new BABYLON.RawTexture(
-			data,
-			TRANSMITTANCE_TEXTURE_WIDTH,
-			TRANSMITTANCE_TEXTURE_HEIGHT,
-			BABYLON.Engine.TEXTUREFORMAT_RGB,
-			scene,
-			false,
-			false,
-			BABYLON.Texture.LINEAR_LINEAR,
-			BABYLON.Engine.TEXTURETYPE_FLOAT,
-		)
-	})
-
-	//dummy texture stuff
-	let dummyData = new Float32Array(32)
-	SINGLE_MIE_SCATTERING_TEXTURE = new BABYLON.RawTexture3D(
-		dummyData,
-		2,
-		2,
-		2,
-		BABYLON.Engine.TEXTUREFORMAT_RGBA,
-		scene,
-		false,
-		false,
-		BABYLON.Texture.LINEAR_LINEAR,
-		BABYLON.Engine.TEXTURETYPE_FLOAT,
-	)
-	//
-
-	let checker = setInterval(function () {
-		if (
-			IRRADIANCE_TEXTURE == null ||
-			SCATTERING_TEXTURE == null ||
-			TRANSMITTANCE_TEXTURE == null ||
-			SINGLE_MIE_SCATTERING_TEXTURE == null
-		) {
-			return
-		}
-
-		clearInterval(checker)
-
-		console.log("All Data textures loaded")
-		callback()
-	}, 10)
 }
 
 export let COMP_GL = null
