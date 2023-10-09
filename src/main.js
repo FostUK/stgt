@@ -26,7 +26,7 @@ const preload = () => {
 
 const loadComplete = () => {
 	preload()
-	createInput()
+	createInput(scene)
 	const { camera, planet, sun, debugOverlay } = initScene(scene, engine, canvas)
 	postProcess(scene, camera, planet, engine, sun)
 

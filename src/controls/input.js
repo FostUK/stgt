@@ -6,7 +6,6 @@ const updateGamePad = (gamepad, state) => {
 
 	//Handle gamepad types
 	if (gamepad instanceof BABYLON.Xbox360Pad) {
-		//Xbox button down/up events
 		gamepad.onButtonDownObservable.add((button, state) => {
 			console.log(BABYLON.Xbox360Button[button] + " pressed")
 		})
@@ -77,12 +76,39 @@ const curveVal = val => {
 	return applyDeadzone(abs, deadzone) * sign
 }
 
-export const createInput = () => {
+const onGamepadDisconnectedObservable = (gamepad, state) => console.log("Disconnected: " + gamepad.id)
+
+const keyHandlers = {
+	"=": () => controls.throttle += 2,
+	"-": () => controls.throttle -= 2,
+	ArrowDown: () => controls.cyclic.y = 5,
+	ArrowUp: () => controls.cyclic.y = -5,
+	ArrowLeft: () => controls.cyclic.x = -5,
+	ArrowRight: () => controls.cyclic.x = 5,
+}
+
+const onKeyDown = event => {
+	console.log(`down: ${event.key}`)
+	keyHandlers[event.key]?.()
+}
+
+const onKeyUp = () => {
+	controls.cyclic.y = 0
+	controls.cyclic.x = 0
+}
+
+const createKeyboardInput = camera => {
+	const element = camera.getEngine().getInputElement()
+
+	element.addEventListener("keydown", onKeyDown, false)
+	element.addEventListener("keyup", onKeyUp, false)
+}
+
+export const createInput = camera => {
 	const gamepadManager = new BABYLON.GamepadManager()
-
-	gamepadManager.onGamepadDisconnectedObservable.add((gamepad, state) => {
-		console.log("Disconnected: " + gamepad.id)
-	})
-
+	gamepadManager.onGamepadDisconnectedObservable.add(onGamepadDisconnectedObservable)
 	gamepadManager.onGamepadConnectedObservable.add(updateGamePad)
+
+	createKeyboardInput(camera)
+
 }

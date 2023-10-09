@@ -1,11 +1,10 @@
-import { COMP_GL, COMP_GL_PROGRAM, GRASS_ONE_TEXTURE, ROCK_ONE_TEXTURE } from "../loader/loader.js"
+import { COMP_GL, COMP_GL_PROGRAM, TEXTURES } from "../loader/loader.js"
 
-function setFeedbackUniformInt(name, value) {
+const setFeedbackUniformInt = (name, value) =>
 	COMP_GL.uniform1i(COMP_GL.getUniformLocation(COMP_GL_PROGRAM, name), value)
-}
-function setFeedbackUniformFloat(name, value) {
+
+const setFeedbackUniformFloat = (name, value) =>
 	COMP_GL.uniform1f(COMP_GL.getUniformLocation(COMP_GL_PROGRAM, name), value)
-}
 
 const PERMUTATION_TEXTURE_HEIGHT = 16
 const PERMUTATION_TEXTURE_WIDTH = 32
@@ -62,16 +61,25 @@ export const planetMaterial = (planet, onComplete) => {
 	setFeedbackUniformFloat("warpAmplitude", planet.properties.warpAmplitude)
 	setFeedbackUniformFloat("warpFrequency", planet.properties.warpFrequency)
 
-	const hashTexture = new BABYLON.CustomProceduralTexture(planet.name, "/assets/textures/hash", HASH_TEXTURE_WIDTH, planet.getScene())
+	const hashTexture = new BABYLON.CustomProceduralTexture(
+		planet.name,
+		"/assets/textures/hash",
+		HASH_TEXTURE_WIDTH,
+		planet.getScene(),
+	)
 	hashTexture.delayLoad()
 	hashTexture.setInt("SEED", planet.seedHash)
 	material.setTexture("hashTexture", hashTexture)
 
-	for (let i = 0; i < GRASS_ONE_TEXTURE.length; i++) {
-		console.log("DOIT")
-		material.setTexture("grassTexture[" + i + "]", GRASS_ONE_TEXTURE[i])
-		material.setTexture("rockTexture[" + i + "]", ROCK_ONE_TEXTURE[i])
-	}
+	material.setTexture("grassTexture[0]", TEXTURES.land["grass.diffuse"])
+	material.setTexture("grassTexture[1]", TEXTURES.land["grass.normal"])
+	material.setTexture("grassTexture[2]", TEXTURES.land["grass.roughness"])
+	material.setTexture("grassTexture[3]", TEXTURES.land["grass.occlusion"])
+
+	material.setTexture("rockTexture[0]", TEXTURES.land["rock.diffuse"])
+	material.setTexture("rockTexture[1]", TEXTURES.land["rock.normal"])
+	material.setTexture("rockTexture[2]", TEXTURES.land["rock.roughness"])
+	material.setTexture("rockTexture[3]", TEXTURES.land["rock.occlusion"])
 
 	const permutationTexture = new BABYLON.RawTexture(
 		planet.noise.perm,

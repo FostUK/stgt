@@ -13,13 +13,12 @@
   * Don't lock mouse. Use pad only for now
 * Rendering
   * Fix planet shading
-  * Fix triplanar mapping of planet texture
+  * Update to webgpu
 * Create / Add cockpit model
 * Babylonjs - can we use lws default extension to allow es6 module loads? 
 * Load Ship (convert loader to Promise.all format)
 * Networking
   * Bounce positions off server
 
-
 ## BUGS
-* Triplanar mapping shimmer
+* Shading shimmer. Possibly due to attempted normal gen in vertex shader

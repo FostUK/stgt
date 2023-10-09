@@ -1,9 +1,4 @@
-import {
-	IRRADIANCE_TEXTURE,
-	SCATTERING_TEXTURE,
-	SINGLE_MIE_SCATTERING_TEXTURE,
-	TRANSMITTANCE_TEXTURE,
-} from "./loader/loader.js"
+import { TEXTURES } from "./loader/loader.js"
 
 export const postProcess = (scene, camera, planet, engine, sun) => {
 	const depthRenderer = scene.enableDepthRenderer(camera, false, true)
@@ -82,10 +77,10 @@ export const postProcess = (scene, camera, planet, engine, sun) => {
 		effect.setMatrix("camera.world", camera.getWorldMatrix())
 		effect.setMatrix("camera.transform", camera.getTransformationMatrix())
 
-		effect.setTexture("irradiance_texture", IRRADIANCE_TEXTURE)
-		effect.setTexture("scattering_texture", SCATTERING_TEXTURE)
-		effect.setTexture("transmittance_texture", TRANSMITTANCE_TEXTURE)
-		effect.setTexture("single_mie_scattering_texture", SINGLE_MIE_SCATTERING_TEXTURE)
+		effect.setTexture("irradiance_texture", TEXTURES.atmo.irradiance)
+		effect.setTexture("scattering_texture", TEXTURES.atmo.scattering)
+		effect.setTexture("transmittance_texture", TEXTURES.atmo.transmittance)
+		effect.setTexture("single_mie_scattering_texture", TEXTURES.atmo.mie)
 		effect.setTexture("permutationTexture", planet.permutationTexture)
 	}
 }

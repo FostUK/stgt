@@ -14,8 +14,8 @@ export class flightCameraInput {
 	attachControl(noPreventDefault) {
 		const element = this.camera.getEngine().getInputElement()
 
-		element.addEventListener("keydown", this.#onKeyDown, false)
-		element.addEventListener("keyup", this.#onKeyUp, false)
+		//element.addEventListener("keydown", this.#onKeyDown, false)
+		//element.addEventListener("keyup", this.#onKeyUp, false)
 		BABYLON.Tools.RegisterTopRootEvents(element, [{ name: "blur", handler: this.#onBlur }])
 	}
 

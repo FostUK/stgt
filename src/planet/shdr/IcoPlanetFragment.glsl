@@ -71,8 +71,8 @@ HeightColor makeSnowHeightColor(vec3 fp, vec3 rp, vec3 fn, vec3 rn)
 		triplanarMap(rockTexture[0], texPos, fn, textureScale),
 		n
 	);
-	vec3 topN = triplanarMap(rockTexture[1], texPos, rn, textureScale);
-	vec3 sideN = triplanarMap(rockTexture[1], texPos, rn, textureScale);
+	vec3 topN = triplanarMap(rockTexture[0], texPos, rn, textureScale);
+	vec3 sideN = triplanarMap(rockTexture[0], texPos, rn, textureScale);
 
 	float deform = (n * 2.0 - 1.0) * 5.0;//(textureScale/(SC*2.0));
 	fn = normalize(fn+deform);
@@ -96,8 +96,8 @@ HeightColor makeRockGrassHeightColor(vec3 fp, vec3 rp, vec3 fn, vec3 rn)
 		fbm31Tex(rp*655366.0)
 	);
 	vec3 side = top;
-	vec3 topN = triplanarMap(rockTexture[1], texPos, rn, textureScale);
-	vec3 sideN = triplanarMap(rockTexture[1], texPos, rn, textureScale);
+	vec3 topN = triplanarMap(rockTexture[0], texPos, rn, textureScale);
+	vec3 sideN = triplanarMap(rockTexture[0], texPos, rn, textureScale);
 
 	/* float deform = (fbm31Tex(rp.xz*30.0) * 2.0 - 1.0) * (radius-textureScale);
 	fn = normalize(fn+deform); */
@@ -110,7 +110,7 @@ HeightColor makeRockGrassHeightColor(vec3 fp, vec3 rp, vec3 fn, vec3 rn)
 
 
 const float theta = 0.0001;
-vec3 calculateNormal(vec3 p, float origin)
+vec3 calculateNormal(vec3 p)
 {
 	vec2 sph = vectorToSpherical(normalize(p));
 	vec3 scx = normalize(sphericalToVector(sph.x+theta, sph.y));
@@ -130,7 +130,6 @@ void main(void)
 	vec3 vOriginalPos = normalize(vPosition);
 	float noiseVal = fbm(vOriginalPos).x;
 
-
 	vec3 flatPos = vec3(vOriginalPos.x, 1.0, vOriginalPos.z) * (radius + (noiseVal * radius * maxHeight));
 	vec3 flatNormal = normalize(vec3(vOriginalPos.x, 1.0, vOriginalPos.z) + normalize(cross(dFdy(flatPos), dFdx(flatPos))));
 
@@ -146,9 +145,9 @@ void main(void)
 
 	vec3 beach = vec3(0.761, 0.698, 0.502);
 	vec3 grass = vec3(0.1, 0.5, 0.2);
-	vec3 normal = roundNormal;
 
-	vec3 color = diffuse;
+	vec3 normal = roundNormal;
+	//vec3 normal = calculateNormal(vOriginalPos);
 
 	// World values
 	vec3 vPositionW = vec3(world * vec4(vPosition, 1.0));
@@ -157,5 +156,10 @@ void main(void)
 	// diffuse
 	float ndl = saturate(dot(normal, lightDir));// * saturate(dot(normalize(vPosition), lightDir));
 
-	gl_FragColor = vec4(color * ndl, 1.);
+
+	// TODO - triplanar mapping actually works. It's the lighting in ndl that appears to be shimmering.
+
+	//gl_FragColor = vec4(diffuse, 1.);
+	// gl_FragColor = vec4(ndl, ndl, ndl, 1.); Test ndl lighting
+	gl_FragColor = vec4(diffuse * ndl, 1.);
 }

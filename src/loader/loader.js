@@ -2,10 +2,9 @@ import { loadShaders } from "./load-shaders.js"
 import { loadAtmospheres } from "./load-atmospheres.js"
 
 let TERRAIN_TRANSFORM = ""
-export let IRRADIANCE_TEXTURE
-export let SCATTERING_TEXTURE
-export let TRANSMITTANCE_TEXTURE
-export let SINGLE_MIE_SCATTERING_TEXTURE
+export let TEXTURES = {
+	land: {},
+}
 
 export const loadResources = (callback, scene, canvas) => {
 	let stageIdx = 0
@@ -21,10 +20,7 @@ export const loadResources = (callback, scene, canvas) => {
 		},
 		() => {
 			loadAtmospheres(scene).then(textures => {
-				IRRADIANCE_TEXTURE = textures.irradiance
-				SCATTERING_TEXTURE = textures.scattering
-				TRANSMITTANCE_TEXTURE = textures.transmittance
-				SINGLE_MIE_SCATTERING_TEXTURE = textures.mie
+				TEXTURES.atmo = textures
 				nextStage()
 			})
 		},
@@ -36,52 +32,36 @@ export const loadResources = (callback, scene, canvas) => {
 	nextStage()
 }
 
-let ASSET_MANAGER = null
-export let ROCK_ONE_TEXTURE = []
-export let GRASS_ONE_TEXTURE = []
+const manifest = [
+	{ name: "rock.diffuse", url: "rock/rock1/diff_1k.png" },
+	{ name: "rock.normal", url: "rock/rock1/nor_1k.png" },
+	{ name: "rock.roughness", url: "rock/rock1/rough_1k.png" },
+	{ name: "rock.occlusion", url: "rock/rock1/ao_1k.png" },
+
+	{ name: "grass.diffuse", url: "grass/grass1/diff_1k.png" },
+	{ name: "grass.normal", url: "grass/grass1/nor_1k.png" },
+	{ name: "grass.roughness", url: "grass/grass1/rough_1k.png" },
+	{ name: "grass.occlusion", url: "grass/grass1/ao_1k.png" },
+]
+
+const onFail = task => console.log("task failed: ", task.errorObject.message, task.errorObject.exception)
+const onProgress = (remainingCount, totalCount) =>
+	console.log(remainingCount + 1 + " out of " + totalCount + " textures need to be loaded.")
 
 const loadAssets = (callback, scene) => {
-	ASSET_MANAGER = new BABYLON.AssetsManager(scene)
+	const assetManager = new BABYLON.AssetsManager(scene)
 
-	ASSET_MANAGER.onProgress = (remainingCount, totalCount, lastFinishedTask) => {
-		console.log(remainingCount + 1 + " out of " + totalCount + " textures need to be loaded.")
-	}
+	assetManager.onProgress = onProgress
+	assetManager.onTaskErrorObservable.add(onFail)
 
-	ASSET_MANAGER.onTaskErrorObservable.add(task => {
-		console.log("task failed: ", task.errorObject.message, task.errorObject.exception)
+	manifest.map(spec => {
+		assetManager.addTextureTask(spec.name, `assets/textures/material/${spec.url}`).onSuccess = task => {
+			TEXTURES.land[task.name] = task.texture
+		}
 	})
 
-	ASSET_MANAGER.onFinish = callback
 
-	/// Rock 1
-	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/diff_1k.png").onSuccess = task => {
-		ROCK_ONE_TEXTURE[0] = task.texture
-	}
-	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/nor_1k.png").onSuccess = task => {
-		ROCK_ONE_TEXTURE[1] = task.texture
-	}
-	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/rough_1k.png").onSuccess = task => {
-		ROCK_ONE_TEXTURE[2] = task.texture
-	}
-	ASSET_MANAGER.addTextureTask("rock1", "assets/textures/material/rock/rock1/ao_1k.png").onSuccess = function (task) {
-		ROCK_ONE_TEXTURE[3] = task.texture
-	}
-
-	/// Grass 1
-	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/diff_1k.png").onSuccess = task => {
-		GRASS_ONE_TEXTURE[0] = task.texture
-	}
-	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/nor_1k.png").onSuccess = task => {
-		GRASS_ONE_TEXTURE[1] = task.texture
-	}
-	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/rough_1k.png").onSuccess = task => {
-		GRASS_ONE_TEXTURE[2] = task.texture
-	}
-	ASSET_MANAGER.addTextureTask("grass1", "assets/textures/material/grass/grass1/ao_1k.png").onSuccess = task => {
-		GRASS_ONE_TEXTURE[3] = task.texture
-	}
-
-	ASSET_MANAGER.load()
+	assetManager.loadAsync().then(callback)
 }
 
 export let COMP_GL = null
