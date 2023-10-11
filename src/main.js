@@ -12,9 +12,7 @@ import { telemetry, updateFlightModel } from "./controls/flight-model.js"
 ;(window.oldWorkers || []).forEach(w => w.terminate())
 Utils.clearAllTimeoutsAndIntervals()
 
-const { scene, engine, canvas } = boot()
-
-const preload = () => {
+const preload = engine => {
 	//console.log(window.navigator.hardwareConcurrency);
 	const dsm = new BABYLON.DeviceSourceManager(engine)
 }
@@ -24,45 +22,48 @@ const preload = () => {
 //	camera.position = new BABYLON.Vector3(0, 0, 0)
 //}
 
-const loadComplete = () => {
-	preload()
-	createInput(scene)
-	const { camera, planet, sun, debugOverlay } = initScene(scene, engine, canvas)
+boot().then(({ scene, engine, canvas }) => {
+	const loadComplete = () => {
+		preload(engine)
+		createInput(scene)
+		const { camera, planet, sun, debugOverlay } = initScene(scene, engine, canvas)
 
-	scene.clearColor = new BABYLON.Color3(0.0, 0.0, 0.0);
+		scene.clearColor = new BABYLON.Color3(0.0, 0.0, 0.0)
 
-	postProcess(scene, camera, planet, engine, sun)
+		postProcess(scene, camera, planet, engine, sun)
 
-	setupPointerLock(canvas)
+		setupPointerLock(canvas)
 
-	const ui = createUi(scene)
+		const ui = createUi(scene)
 
-	const step = getStep(planet, scene, debugOverlay)
+		const step = getStep(planet, scene, debugOverlay)
 
-	scene.registerBeforeRender(() => {
-		updateFlightModel()
-		ui.update()
+		scene.registerBeforeRender(() => {
+			updateFlightModel()
+			ui.update()
 
-		//husky.body.translate(BABYLON.Axis.Z, telemetry.velocity.z, BABYLON.Space.LOCAL)
-		//husky.body.addRotation(telemetry.pitch, 0, 0) //Pitch
-		//husky.body.addRotation(0, 0.1, 0)   //yaw
-		//husky.body.addRotation(0, 0, telemetry.roll) //roll
+			//husky.body.translate(BABYLON.Axis.Z, telemetry.velocity.z, BABYLON.Space.LOCAL)
+			//husky.body.addRotation(telemetry.pitch, 0, 0) //Pitch
+			//husky.body.addRotation(0, 0.1, 0)   //yaw
+			//husky.body.addRotation(0, 0, telemetry.roll) //roll
 
+			//camera.translate(BABYLON.Axis.Z, telemetry.velocity.z, BABYLON.Space.LOCAL)
 
-		//camera.translate(BABYLON.Axis.Z, telemetry.velocity.z, BABYLON.Space.LOCAL)
+			step()
+			//main.mouseDX = 0
+			//main.mouseDY = 0
+		})
 
-		step()
-		//main.mouseDX = 0
-		//main.mouseDY = 0
+		//scene.registerAfterRender(() => {
+		//	// postStep();
+		//})
+
+		engine.runRenderLoop(() => scene.render())
+	}
+
+	//TODO load resources maybe shouldn't have loadcomplete as a callback and use promises instead
+
+	Promise.all(models(scene)).then(() => {
+		loadResources(loadComplete, scene, canvas)
 	})
-
-	//scene.registerAfterRender(() => {
-	//	// postStep();
-	//})
-
-	engine.runRenderLoop(() => scene.render())
-}
-
-Promise.all(models(scene)).then(() => {
-	loadResources(loadComplete, scene, canvas)
 })

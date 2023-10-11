@@ -10,6 +10,7 @@ export const loadResources = (callback, scene, canvas) => {
 	let stageIdx = 0
 	let stages
 
+	//TODO this could be done as a promise chain
 	const nextStage = value => stages[stageIdx++](value)
 
 	stages = [
@@ -91,6 +92,4 @@ function setupCompGLProgram(callback, canvas) {
 	gl.useProgram(program)
 
 	callback()
-
-	return { COMP_GL, COMP_GL_PROGRAM }
 }

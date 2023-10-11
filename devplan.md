@@ -14,6 +14,7 @@
 * Rendering
   * Fix planet shading
   * Update to webgpu
+    * setupCompGLProgram in loader.js will need gutting as uses gl specific calls
   * Fix atmosphere rendering
 * Create / Add cockpit model
 * Babylonjs - can we use lws default extension to allow es6 module loads? 

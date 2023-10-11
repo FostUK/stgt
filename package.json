@@ -18,10 +18,10 @@
 	"license": "ISC",
 	"dependencies": {
 		"express": "^4.17.1",
-		"babylonjs": "5.16.0",
-		"babylonjs-gui": "5.16.0",
-		"babylonjs-loaders": "5.16.0",
-		"babylonjs-materials": "5.16.0"
+		"babylonjs": "^6.23.1",
+		"babylonjs-gui": "^6.23.1",
+		"babylonjs-loaders": "^6.23.1",
+		"babylonjs-materials": "^6.23.1"
 	},
 	"devDependencies": {
 		"prettier": "^3.0.3"
