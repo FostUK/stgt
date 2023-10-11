@@ -28,6 +28,9 @@ const loadComplete = () => {
 	preload()
 	createInput(scene)
 	const { camera, planet, sun, debugOverlay } = initScene(scene, engine, canvas)
+
+	scene.clearColor = new BABYLON.Color3(0.0, 0.0, 0.0);
+
 	postProcess(scene, camera, planet, engine, sun)
 
 	setupPointerLock(canvas)

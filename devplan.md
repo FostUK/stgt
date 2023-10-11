@@ -14,6 +14,7 @@
 * Rendering
   * Fix planet shading
   * Update to webgpu
+  * Fix atmosphere rendering
 * Create / Add cockpit model
 * Babylonjs - can we use lws default extension to allow es6 module loads? 
 * Load Ship (convert loader to Promise.all format)

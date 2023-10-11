@@ -79,16 +79,17 @@ const curveVal = val => {
 const onGamepadDisconnectedObservable = (gamepad, state) => console.log("Disconnected: " + gamepad.id)
 
 const keyHandlers = {
-	"=": () => controls.throttle += 2,
-	"-": () => controls.throttle -= 2,
-	ArrowDown: () => controls.cyclic.y = 5,
-	ArrowUp: () => controls.cyclic.y = -5,
-	ArrowLeft: () => controls.cyclic.x = -5,
-	ArrowRight: () => controls.cyclic.x = 5,
+	"=": () => controls.throttle += 4,
+	"-": () => controls.throttle -= 4,
+	"0": () => controls.throttle = 0,
+	ArrowDown: () => controls.cyclic.y = 8,
+	ArrowUp: () => controls.cyclic.y = -8,
+	ArrowLeft: () => controls.cyclic.x = -8,
+	ArrowRight: () => controls.cyclic.x = 8,
 }
 
 const onKeyDown = event => {
-	console.log(`down: ${event.key}`)
+	//console.log(`down: ${event.key}`)
 	keyHandlers[event.key]?.()
 }
 
