@@ -23,7 +23,7 @@ const shaders = [
 
 const loadShader = name => Utils.loadFile(`${shaderDir}${name}.glsl`)
 
-const unMapShaders = callback => data => {
+const unMapShaders = data => {
 	const noise = data[6] + data[7] + data[3]
 	const terrain_transform = data[2] + noise + data[13]
 
@@ -43,9 +43,9 @@ const unMapShaders = callback => data => {
 	BABYLON.Effect.ShadersStore["IcoPlanetFragmentShader"] = data[5]
 
 	console.log("All Shaders loaded")
-	callback(terrain_transform)
+	return terrain_transform
 }
 
 
 
-export const loadShaders = callback => Promise.all(shaders.map(loadShader)).then(unMapShaders(callback))
+export const loadShaders = () => Promise.all(shaders.map(loadShader)).then(unMapShaders)

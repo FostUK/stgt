@@ -64,6 +64,6 @@ boot().then(({ scene, engine, canvas }) => {
 	//TODO load resources maybe shouldn't have loadcomplete as a callback and use promises instead
 
 	Promise.all(models(scene)).then(() => {
-		loadResources(loadComplete, scene, canvas)
+		loadResources(scene, canvas).then(loadComplete)
 	})
 })

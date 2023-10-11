@@ -1,36 +1,17 @@
 import { loadShaders } from "./load-shaders.js"
 import { loadAtmospheres } from "./load-atmospheres.js"
 
-let TERRAIN_TRANSFORM = ""
 export let TEXTURES = {
 	land: {},
 }
 
-export const loadResources = (callback, scene, canvas) => {
-	let stageIdx = 0
-	let stages
-
-	//TODO this could be done as a promise chain
-	const nextStage = value => stages[stageIdx++](value)
-
-	stages = [
-		() => loadShaders(nextStage),
-		tt => {
-			TERRAIN_TRANSFORM = tt
-			nextStage()
+export const loadResources = (scene, canvas) => {
+	return Promise.all([loadShaders(), loadAtmospheres(scene), loadAssets(scene)]).then(
+		([TERRAIN_TRANSFORM, textures]) => {
+			TEXTURES.atmo = textures
+			setupCompGLProgram(canvas, TERRAIN_TRANSFORM)
 		},
-		() => {
-			loadAtmospheres(scene).then(textures => {
-				TEXTURES.atmo = textures
-				nextStage()
-			})
-		},
-		() => loadAssets(nextStage, scene),
-		() => setupCompGLProgram(nextStage, canvas),
-		callback,
-	]
-
-	nextStage()
+	)
 }
 
 const manifest = [
@@ -49,7 +30,7 @@ const onFail = task => console.log("task failed: ", task.errorObject.message, ta
 const onProgress = (remainingCount, totalCount) =>
 	console.log(remainingCount + 1 + " out of " + totalCount + " textures need to be loaded.")
 
-const loadAssets = (callback, scene) => {
+const loadAssets = scene => {
 	const assetManager = new BABYLON.AssetsManager(scene)
 
 	assetManager.onProgress = onProgress
@@ -61,14 +42,13 @@ const loadAssets = (callback, scene) => {
 		}
 	})
 
-
-	assetManager.loadAsync().then(callback)
+	return assetManager.loadAsync()
 }
 
 export let COMP_GL = null
 export let COMP_GL_PROGRAM = null
 
-function setupCompGLProgram(callback, canvas) {
+function setupCompGLProgram(canvas, TERRAIN_TRANSFORM) {
 	function getShader(gl, source, type) {
 		let sh = gl.createShader(type)
 		gl.shaderSource(sh, source)
@@ -79,7 +59,6 @@ function setupCompGLProgram(callback, canvas) {
 
 	const gl = canvas.getContext("webgl2") || canvas.getContext("experimental-webgl2")
 	COMP_GL = gl
-	// console.log(gl);
 
 	const program = gl.createProgram()
 	COMP_GL_PROGRAM = program
@@ -90,6 +69,4 @@ function setupCompGLProgram(callback, canvas) {
 	gl.linkProgram(program)
 	console.log("Program Status:", gl.getProgramInfoLog(program))
 	gl.useProgram(program)
-
-	callback()
 }
